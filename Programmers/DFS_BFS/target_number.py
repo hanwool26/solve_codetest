@@ -1,5 +1,5 @@
 # Target number solution
-
+# Idea 1
 def permute(n, r) -> int:
     k = 1
     j = 1
