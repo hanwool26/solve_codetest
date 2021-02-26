@@ -12,7 +12,7 @@ def find_target(k, target, operator, len_numbers, depth):
     
     stack[depth].append(k)
     
-    if depth == len_numbers+1:
+    if depth == len_numbers:
         if k == target:
             count = count + 1
         return 
@@ -26,7 +26,7 @@ def solution(numbers, target):
 
     len_numbers = len(numbers)
     init_number = numbers[0]
-    find_target(0, target, '-', len_numbers, 1)
+    find_target(0, target, '-', len_numbers, 0)
     
     for i in range(len_numbers+2):
         print(stack[i])
