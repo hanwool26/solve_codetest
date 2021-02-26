@@ -9,7 +9,6 @@ def find_target(k, target, operator, len_numbers, depth):
     global stack
    
     print(f'value : {k}, depth : {depth}, count : {count}, operator : {operator}')
-
     
     stack[depth].append(k)
     
