@@ -1,12 +1,12 @@
 count = 0
 
 # For Debug
-#stack = [[] for i in range(10)]
+# stack = [[] for i in range(10)]
 
 def find_target(k, target, operator, len_numbers, depth, numbers):
     global count    
-    global init_number
-    global stack
+    # For Debug
+    # global stack
     
     # For debug
     # print(f'value : {k}, depth : {depth}, count : {count}, operator : {operator}')
