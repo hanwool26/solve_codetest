@@ -22,13 +22,10 @@ def dfs(comp, visited, node, computers):
             if neighbour == 1:
                 dfs(computers[k], visited, k, computers)
     else:
-        # print('node is already visited', node)
         pass
             
-
 def solution(n, computers):
     answer = 0
-    global count
     visited = []
     old = []
     for i in range(n):
@@ -36,10 +33,7 @@ def solution(n, computers):
         # print('visited :', visited)
         if is_visited_changed(old, visited):
             #count += 1
-            old = visited.copy()
-
+            old = visited.copy() # = 로 대입 시, 같은 id를 참조하게됨. copy 연산자 활용하여 list 복제해야함(swallow copy)
         answer += 1
-        
-    # print('visitied list :', visited)
-    # print('count :', count)
+   
     return count
