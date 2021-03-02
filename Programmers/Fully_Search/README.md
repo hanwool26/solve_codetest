@@ -13,3 +13,6 @@
     - 답을 찍는 패턴과 문제를 for문으로 1:1 비교
     - 정답일 경우 count하여 List에 추가 
     - max index를 list comprehension으로 구현
+
+### 결과
+    - 정답.
