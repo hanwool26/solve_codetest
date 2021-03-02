@@ -1,10 +1,16 @@
 ## Progranmmers 알고리즘 유형별 풀이
 - 1. DFS / BFS
   - target number
+    - https://programmers.co.kr/learn/courses/30/lessons/43165
     - due date : ~2.26 18:00
   - network
+    - https://programmers.co.kr/learn/courses/30/lessons/43162
     - due data : ~3.1 18:00
 
 - 2. 완전탐색(Fully_search)
   - 모의고사
+    - https://programmers.co.kr/learn/courses/30/lessons/42840
     - due date : ~3.3 18:00
+  - 소수찾기
+    - https://programmers.co.kr/learn/courses/30/lessons/42839
+    - due date : ~3.5 18:00
