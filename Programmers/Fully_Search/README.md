@@ -1,4 +1,4 @@
-### criteria of Algorith
+### kinds of Fully Search
     1. brute force
         - N중 for문으로 푸는 방법 
     2. 순열
@@ -9,5 +9,8 @@
     4. 비트마스크
     5. 백트래킹
 
-
+### 아이디어 1
+    - 답을 찍는 패턴과 문제를 for문으로 1:1 비교
+    - 정답일 경우 count하여 List에 추가 
+    - max index를 list comprehension으로 구현 (https://velog.io/@pm1100tm/Python-list-comprehension-%EB%A6%AC%EC%8A%A4%ED%8A%B8-%ED%91%9C%ED%98%84%EC%8B%9D)
 
