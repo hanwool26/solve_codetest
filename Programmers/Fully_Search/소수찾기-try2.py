@@ -14,7 +14,7 @@ def find_prime(list_num, size):
     prime_list = []
     count = 0
     for i in range(0,size):
-        combi_num = list(itertools.permutations(list_num, i+1))
+        combi_num = list(itertools.permutations(list_num, i+1)) # 순열 함수, 조합 함수는 itertools.combinations(p,r)
         # print('combi :', combi_num)
         for k in combi_num:
             check_num = int(''.join(k))
