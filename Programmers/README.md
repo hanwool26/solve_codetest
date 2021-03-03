@@ -5,7 +5,10 @@
     - due date : ~2.26 18:00
   - network
     - https://programmers.co.kr/learn/courses/30/lessons/43162
-    - due data : ~3.1 18:00
+    - due date : ~3.1 18:00
+  - 단어 변환
+    - https://programmers.co.kr/learn/courses/30/lessons/43163
+    - due date : ~3.7 18:00
 
 - 2. 완전탐색(Fully_search)
   - 모의고사
