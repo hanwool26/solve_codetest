@@ -9,6 +9,9 @@
   - 단어 변환
     - https://programmers.co.kr/learn/courses/30/lessons/43163
     - due date : ~3.7 18:00
+  - 여행 경로
+    - https://programmers.co.kr/learn/courses/30/lessons/43164
+    - due date : ~3.9 18:00
 
 - 2. 완전탐색(Fully_search)
   - 모의고사
