@@ -20,3 +20,6 @@
   - 소수찾기
     - https://programmers.co.kr/learn/courses/30/lessons/42839
     - due date : ~3.5 18:00
+  - 카펫
+    - https://programmers.co.kr/learn/courses/30/lessons/42842
+    - 
