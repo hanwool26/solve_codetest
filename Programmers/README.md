@@ -1,5 +1,5 @@
 ## Programmers 알고리즘 유형별 풀이
-- 1. DFS / BFS
+#### DFS / BFS
   - target number
     - https://programmers.co.kr/learn/courses/30/lessons/43165
     - due date : ~2.26 18:00
@@ -13,7 +13,7 @@
     - https://programmers.co.kr/learn/courses/30/lessons/43164
     - due date : ~3.9 18:00
 
-- 2. 완전탐색(Fully_search)
+#### 완전탐색(Fully_search)
   - 모의고사
     - https://programmers.co.kr/learn/courses/30/lessons/42840
     - due date : ~3.3 18:00
@@ -23,4 +23,4 @@
   - 카펫
     - https://programmers.co.kr/learn/courses/30/lessons/42842
     - due date : ~3.11 18:00
-- 3. 탐욕법(
+#### 탐욕법(Greedy)
