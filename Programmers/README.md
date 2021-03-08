@@ -27,3 +27,6 @@
   - 체육복
     - https://programmers.co.kr/learn/courses/30/lessons/42862
     - due date : ~3.12 18:00
+  - 조이스틱
+    - https://programmers.co.kr/learn/courses/30/lessons/42860
+    - due date : ~3.13 18:00
