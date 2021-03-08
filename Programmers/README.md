@@ -1,4 +1,4 @@
-## Progranmmers 알고리즘 유형별 풀이
+## Programmers 알고리즘 유형별 풀이
 - 1. DFS / BFS
   - target number
     - https://programmers.co.kr/learn/courses/30/lessons/43165
