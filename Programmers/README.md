@@ -30,3 +30,6 @@
   - 조이스틱
     - https://programmers.co.kr/learn/courses/30/lessons/42860
     - due date : ~3.13 18:00
+  - 큰수만들기
+    - https://programmers.co.kr/learn/courses/30/lessons/42883
+    - due date : ~3.14 18:00
