@@ -6,6 +6,7 @@
   - 5문제 런타임 에러, 테스트케이스를 알수가 없어 디버깅 
 
 ### 정답
+<pre>
 <code>
 def solution(number, k):
     # stack에 입력값을 순서대로 삽입 
@@ -26,3 +27,4 @@ def solution(number, k):
         stack = stack[:-k]
     return ''.join(stack)
   </code>
+  </pre>
