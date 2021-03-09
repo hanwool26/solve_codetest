@@ -33,3 +33,7 @@
   - 큰수만들기
     - https://programmers.co.kr/learn/courses/30/lessons/42883
     - due date : ~3.14 18:00
+#### 이진탐색(Binary Search)
+  - 입국심사
+    - https://programmers.co.kr/learn/courses/30/lessons/43238
+    - due date : ~3.15 18:00
