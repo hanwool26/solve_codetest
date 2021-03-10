@@ -30,6 +30,3 @@ def solution(n, times):
     
     print(answer)
     return answer
-    
-    #print(answer)
-    return answer
