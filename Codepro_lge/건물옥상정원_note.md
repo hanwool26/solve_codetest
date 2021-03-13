@@ -6,7 +6,7 @@
   - 시간초과로 인해 몇몇 테스트 케이스는 실패 
 
 ### 해답
-'''python
+```python
 def solution():
     # user_input = input()
     cnt = 0
@@ -25,4 +25,4 @@ def solution():
     print(sum)
 		
 solution()
-'''
+```
