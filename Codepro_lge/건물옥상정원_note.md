@@ -6,7 +6,7 @@
   - 시간초과로 인해 몇몇 테스트 케이스는 실패 
 
 ### 해답
-  - building index 에서 자기자신의 옥상을 볼수 있는 빌딩들만 stack 남겨놓고 그 갯수를 구하는 
+  - building index 에서 자기자신의 옥상을 볼수 있는 빌딩들만 stack 남겨놓고 그 갯수를 구하는 형식
 ```python
 def solution():
     # user_input = input()
