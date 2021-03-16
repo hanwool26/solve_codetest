@@ -1,6 +1,7 @@
 N = int(input())
 square = []
 i = 0
+all_colors = 0
 while i < N:
     input_num = input()    
     square.append(input_num)    
@@ -10,8 +11,8 @@ def is_overpaint(cnt, pos, square, colors):
     up_pos = pos[0]
     down_pos = pos[1]
     
-    for i in range(up_pos[0], down_pos[0]):
-        for j in range(up_pos[1], down_pos[1]):
+    for i in range(up_pos[0], down_pos[0]+1):
+        for j in range(up_pos[1], down_pos[1]+1):
             if cnt != int(square[i][j]):
                 if square[i][j] not in colors:
                     # print('overpaint', cnt, square[i][j])
@@ -30,6 +31,7 @@ def get_square(left_up, left_down, right_up, right_down):
     return [x,y]
 
 def find_contour(N, square, colors):
+    global all_colors
     left_up, left_down, right_up, right_down = [0,0], [0,0], [0,0], [0,0]
     pos = [0,0]
     
@@ -41,6 +43,7 @@ def find_contour(N, square, colors):
         right_down = get_contour(N-1,-1,-1,N-1,-1,-1,cnt, square)
         # print(cnt, left_up, right_up, left_down, right_down)
         if left_up != None:
+            all_colors += 1
             pos = get_square(left_up, left_down, right_up, right_down)
             is_overpaint(cnt, pos, square, colors)         
         cnt+=1
@@ -55,6 +58,6 @@ def solution(N, square):
     colors = []
     # print_square(N, square)
     find_contour(N, square, colors)
-    print(len(colors))    
+    print(all_colors-len(colors))    
     
 solution(N, square)
