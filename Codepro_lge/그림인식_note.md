@@ -5,7 +5,7 @@
 ### 결과
   - 정답
 
-'''python
+```python
 import sys
 read = sys.stdin.readline
 
@@ -37,4 +37,4 @@ for k,v in pos.items():
             if board[i][j]!=0 and board[i][j]!=k:
                 check[int(board[i][j])] = 0
 print(sum(check))
-'''
+```
