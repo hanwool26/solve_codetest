@@ -5,7 +5,7 @@
 ### 결과
   - 정답
 
-### 
+### 문제풀이
 ```python
 import sys
 read = sys.stdin.readline
