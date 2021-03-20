@@ -16,7 +16,7 @@ user_input = 4
 display = [[2,10], [2,8], [3,4], [4,12]]
 '''
 
-minimum = 10000
+minimum = float('inf') # 무한대 표현 in python
 multiple = 1
 num_sum = 0
 
