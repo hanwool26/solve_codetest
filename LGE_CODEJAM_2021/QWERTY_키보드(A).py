@@ -5,7 +5,6 @@ for i in range(N):
     temp = input()
     input_key.append(temp)
 
-
 from collections import deque
 
 '''
