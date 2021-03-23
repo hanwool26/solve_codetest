@@ -5,7 +5,7 @@
   - 1문제만 맞춤. 
   - Binary Search가 아니라 Dynamic programming 방식으로 최적화 알고리즘 사용해야함. 
 
-'''python
+```python
 user_input = int(input())
 array = list(map(int, input().split()))
 
@@ -14,4 +14,4 @@ for i in range(1, user_input):
     if array[i-1] < array[i]:
         sum = sum - array[i-1] + array[i]
 print(sum)
-'''python
+```
