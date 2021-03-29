@@ -8,10 +8,14 @@ vector<int> old;
 vector<int> visited;
 
 int count = 0;
-
 bool is_visited_changed(vector<int> old, vector<int> visited)
 {
+	/*
 	cout << "is_visited_changed in" << endl;
+	for(int i=0; i<visited.size(); i++){
+		cout << "old members: " << visited[i] << endl;
+	}
+	*/	
 	if (visited == old){
 		return false;
 	}else{
@@ -20,19 +24,19 @@ bool is_visited_changed(vector<int> old, vector<int> visited)
 	}
 }
 
-void DFS(vector<int> computer, vector<int> visited, int node, vector<vector<int>> computers)
+void DFS(vector<int> computer, vector<int>& visited, int node, vector<vector<int>> computers) // 값을 전달받아 변경 시, 주소값으로 전달받아야함.
 {
-	cout << "DFS in" << endl;
-
+	//cout << "DFS in" << endl;
 	for(int i=0; i<visited.size(); i++){
-		cout << "node " << node << "visited " << visited[i] << endl;
+		//cout << "node " << node << "visited " << visited[i] << endl;
 		if(node == visited[i]){
-			cout << "visited == node" << endl;
+			//cout << "visited == node" << endl;
 			return;
 		}
 	}
-	cout << "node" << node << endl;
+	//cout << "node" << node << endl;
 	visited.push_back(node);
+	//cout << "after push : " << visited[0] << endl;
 	for(int i=0; i<computers[node].size(); i++){
 		if (i==node) continue;
 		if (computers[node][i]) {
@@ -47,19 +51,10 @@ int solution(int n, vector<vector<int>> computers) {
     for(int i=0; i<n; i++){
     	DFS(computers[i], visited, i, computers);
     	if (is_visited_changed(old, visited) == true) {
-    		cout << "copy" << endl;
-    		old = visited;
-    		
+    		//cout << "copy" << endl;
+    		old = visited;    		
     	}
     }
     answer = count;
     return answer;
-}
-
-int main()
-{
-	vector<vector<int>> computers = {{1, 1, 0}, {1, 1, 0}, {0, 0, 1}};
-	int n = 3;	
-	
-	cout << solution(n, computers) << endl;
 }
