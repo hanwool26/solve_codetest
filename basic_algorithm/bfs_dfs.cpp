@@ -44,9 +44,9 @@ void bfs(vector<int> graph[], int start, vector<bool> visit){
 		}
 	}
 }
-
 int main(void){
 	//bool visit[4] = { false,};
 	vector<bool> visit(4,false);
 	bfs(a, 0, visit);
+	return 0;
 }
