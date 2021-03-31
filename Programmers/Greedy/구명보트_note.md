@@ -5,3 +5,30 @@
 
 ### 결과
   - 정확도는 모두 맞았지만, 최적화 단계에서 3/5 개 맞음.
+
+### 풀이
+```cpp
+#include <vector>
+#include <algorithm>
+
+
+using namespace std;
+
+int solution(vector<int> people, int limit) {
+    int answer = 0;
+    int idx = 0;
+    
+    sort(people.begin(), people.end());
+    
+    while(people.size() > idx){        
+        int weight = people.back();
+        people.pop_back();
+        if(people[idx] + weight <= limit){
+            answer++;
+            idx++;
+        } else answer++;
+
+    }
+    return answer;
+}
+```
