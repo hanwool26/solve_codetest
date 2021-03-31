@@ -15,8 +15,7 @@ int solution(vector<int> people, int limit) {
     for(auto &i:people){
     	cout << i << " ";
     }
-    */
-    
+    */    
     while(!people.empty()){
     	weight = 0;
     	weight += people.back();
