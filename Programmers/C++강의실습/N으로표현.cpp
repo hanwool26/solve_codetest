@@ -1,11 +1,11 @@
 #include <iostream>
-#include <unordered_set>
+#include <unordered_set> 
 
 using namespace std;
 
 int solution(int N, int number) {
     int answer = -1;
-    unordered_set<int> s[9];
+    unordered_set<int> s[9];	// 중복되지 않는 키값을 가질 수 있는 set 
     int base = 0;
     
     for(int i=1; i<8; i++){
