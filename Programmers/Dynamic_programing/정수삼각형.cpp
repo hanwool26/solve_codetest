@@ -2,34 +2,24 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <cmath>
 
 using namespace std;
 
-int max;
-
-void DFS(vector<vector<int>> triangle, vector<int> &total, int *size, int sum, int depth, int index)
-{
-	if(depth > *size-1 || index > *size-1){
-		return;
-	}
-
-    sum += triangle[depth][index];
-    if(depth==*size-1){
-        total.push_back(sum);  
-        return;
-    }
-    DFS(triangle,total, size, sum, depth+1, index);
-    DFS(triangle, total, size, sum, depth+1, index+1);    
-}
-
 int solution(vector<vector<int>> triangle) {
     int answer = 0;
-    vector<int> total;
-    vector<vector<int>> visit;
-    int size = triangle.size();
-    DFS(triangle,total, &size, 0, 0, 0);
+    int size = triangle.size()-1;
     
-    answer = *max_element(total.begin(), total.end());
-    //cout << "answer" << answer << endl;
+    for(int i=0; i<size; i++){
+    	for(int j=0; j<i+1; j++){
+    		//cout << triangle[i][j] << endl;
+    		if(j!=0){
+    			triangle[i+1][j] = max(triangle[i+1][j] + triangle[i][j-1], triangle[i+1][j] + triangle[i][j]);
+    		}
+    		if(j==0) triangle[i+1][j] = triangle[i][j] + triangle[i+1][j];
+    		if(j+1==i+1) triangle[i+1][j+1] = triangle[i][j] + triangle[i+1][j+1];
+    	}
+    }    			
+    answer = *max_element(triangle[size].begin(), triangle[size].end());
     return answer;
 }
