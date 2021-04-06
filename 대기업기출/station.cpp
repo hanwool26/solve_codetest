@@ -15,7 +15,7 @@ string calc_time(vector<string> station, string curTime, int x){
 	for(auto &i:station){
 		cur[i.substr(0,2)].push_back(i.substr(3,2));
 	}	
-	while(true){
+	while(now < 24){
 		if(cur.find(nowHour) != cur.end()){
 			for(auto &i:cur[nowHour]){
 				if( i >= curTime.substr(3,2)){
@@ -38,8 +38,8 @@ string calc_time(vector<string> station, string curTime, int x){
 	int int_curhour = stoi(curHour);
 	
 	if(int_curmin+x >=60){
+		int_curhour = int_curhour+((int_curmin+x)/60);
 		int_curmin = (int_curmin+x)%60;
-		int_curhour = int_curhour+1;
 		curHour = to_string(int_curhour);
 		curMin = to_string(int_curmin);
 	} else {
@@ -67,8 +67,8 @@ int main(void){
 	string curTime = "12:10";
 	int x = 30;
 	int y = 60;
-	vector<string> curStation = { "12:05", "12:20", "13:40"};
-	vector<string> transtation = { "13:20", "13:30"};
+	vector<string> curStation = {"12:05", "12:20", "13:40"};
+	vector<string> transtation = {"13:20", "13:30"};
 	
 	solution(curTime, x, y, curStation, transtation);
 }
