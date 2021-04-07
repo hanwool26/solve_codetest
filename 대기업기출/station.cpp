@@ -53,8 +53,6 @@ string calc_time(vector<string> station, string curTime, int x){
 
 string solution(string curTime, int x, int y, vector<string> curStation, vector<string> transtation){
 	string answer = "";
-	string curHour = "";
-	string curMin = "";
 	string trans = "";
 	string nowHour = curTime.substr(0,2);
 	
