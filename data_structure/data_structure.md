@@ -7,6 +7,7 @@
   - linear list
 - Tree
 - Graph
+- Hash
 - Heap
   - min Heap
   - max Heap
