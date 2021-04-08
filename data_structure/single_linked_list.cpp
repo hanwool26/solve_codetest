@@ -186,7 +186,6 @@ int main(){
 	l.AddNode(1);
 	l.AddNode(7);
 	l.AddNode(4);
-	l.AddNode(9);
 	l.Show();
 	l.AddPosition(3,2);
 	l.Show();
