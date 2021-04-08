@@ -7,29 +7,7 @@ void sort(int start, int end, vector<int> &numbers){
 	if(start >= end) {
 		return;
 	}
-	/*
-    int pivot = start;
-    int temp;
-    int i, j = 0;
-    
-    while(true){
-        for(i=pivot+1; i<=end; i++){
-            if(numbers[i] > numbers[pivot]) break;
-        }
-        for(j=end; j>start; j--){
-            if(numbers[j] < numbers[pivot]) break;        
-        }
-        temp = numbers[j];
-        numbers[j] = numbers[i];
-        numbers[i] = temp;
-		cout << "i j" << numbers[i] << numbers[j] << endl;  
-		if (i>j) break;      
-    }
-    temp = numbers[i];
-    numbers[i] = numbers[pivot];
-    numbers[pivot] = temp;
-    cout << temp << endl;    
-    */
+
     int pivot = start;
     int i = pivot+1;
     int j = end;
@@ -42,8 +20,8 @@ void sort(int start, int end, vector<int> &numbers){
     		j--;
     	}    	
     	if(i>j){
-    		temp = numbers[i];
-    		numbers[i] = numbers[pivot];
+    		temp = numbers[j];
+    		numbers[j] = numbers[pivot];
     		numbers[pivot] = temp;
     	}else{
     		temp = numbers[j];
