@@ -1,6 +1,12 @@
 ### Data structure
 - Queue
-- List
-- Tree
-- Heap
+  - Dequeue
 - Stack
+- List
+  - linked list
+  - linear list
+- Tree
+- Graph
+- Heap
+  - min Heap
+  - max Heap
