@@ -42,8 +42,6 @@ int adding_balance_weight(vector<int> dp, int max, int min, set<int> remain_set)
 	return adding_bw;		
 }
 
-
-
 int check_possible(set<int> s, vector<int> v, int min, int max){
 	int count = 0;
 	vector<int> remain;
@@ -91,22 +89,24 @@ int solution(vector<int> v, int min, int max){
 			if(plus <= max && plus >= min) dp.push_back(plus);
 			if(minus <= max && minus >= min) dp.push_back(minus);
 		}
-	}	
-		
+	}			
 	for(auto &i:dp){
 		s.insert(i);
 	}	
-	return check_possible(s, dp, min, max);
-	
+	return check_possible(s, dp, min, max);	
 }
 
 int main(void){
 	int answer = 0;
 	int min_weight = 1;
 	int max_weight = 15;
+	clock_t start, finish;
 	vector<int> balance_weight = {1,2,4,8};	
 	
+	start = clock();
 	answer = solution(balance_weight, min_weight, max_weight);
-	cout << "answer : " << answer;
+	cout << "answer : " << answer << endl;
+	finish = clock();
+	cout << "duration : " << (double)(finish - start) / CLOCKS_PER_SEC << endl;
 	return 0;
-}	
+}
