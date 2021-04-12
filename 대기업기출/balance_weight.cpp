@@ -6,15 +6,16 @@
 
 using namespace std;
 
-int adding_balance_weight(vector<int> dp, int max, int min, set<int> remain_set){
+int adding_balance_weight(vector<int> dp, set<int> s, int max, int min, set<int> remain_set){
 	int max_count = 0;
 	int count;
 	vector<int> temp;	// temporary vector
 	int adding_bw;
 	
 	for(int i=1; i<=500; i++){
+		if(s.find(i)!=s.end()) continue;
 		temp.assign(dp.begin(), dp.end());
-		temp.push_back(i);
+		temp.push_back(i);		
 		
 		int temp_size = temp.size();
 		for(int j=0; j<temp_size; j++){
@@ -26,15 +27,15 @@ int adding_balance_weight(vector<int> dp, int max, int min, set<int> remain_set)
 			if(minus <= max && minus >= min) temp.push_back(minus);
 		}
 		
-		for(auto &i:temp){
-			if(remain_set.find(i)!=remain_set.end()){
+		for(auto &member:temp){
+			if(remain_set.find(member)!=remain_set.end()){
 				count +=1;				
 			}
 		}
 		if(max_count < count){
 			max_count = count;
 			adding_bw = i;
-			// cout << "max adding bw : " << i << endl;
+			cout << "max adding bw : " << i << endl;
 		}
 		temp.clear();	
 		count = 0;		
@@ -42,13 +43,13 @@ int adding_balance_weight(vector<int> dp, int max, int min, set<int> remain_set)
 	return adding_bw;		
 }
 
-int check_possible(set<int> s, vector<int> v, int min, int max){
+int check_possible(set<int> s, set<int> origin_s, vector<int> v, int min, int max){
 	int count = 0;
 	vector<int> remain;
 	set<int> remain_set;
 	for(int i = min; i<=max; i++){
 		if(s.find(i) != s.end()) {
-			// cout << i << " ";
+			cout << i << " ";
 			continue;
 		}else{
 			remain.push_back(i);
@@ -60,13 +61,13 @@ int check_possible(set<int> s, vector<int> v, int min, int max){
 		for(auto &i:remain){
 			remain_set.insert(i);
 		}
-		/*
+		
 		cout << endl << "Remain" << endl;
 		for(auto &i:remain){
 			cout << i << " ";
 		}
-		*/
-		return adding_balance_weight(v, min, max, remain_set);
+		
+		return adding_balance_weight(v, origin_s, min, max, remain_set);
 		cout << endl;
 	}
 }
@@ -75,6 +76,7 @@ int solution(vector<int> v, int min, int max){
 	vector<int> dp; // all posible weights to measure 
 	vector<int> remain;
 	set<int> s;
+	set<int> origin_s;
 	
 	for(int i=0; i<v.size(); i++){
 		int w_pop = v[i];
@@ -89,17 +91,20 @@ int solution(vector<int> v, int min, int max){
 			if(plus <= max && plus >= min) dp.push_back(plus);
 			if(minus <= max && minus >= min) dp.push_back(minus);
 		}
+	}	
+	for(auto &i:v){
+		origin_s.insert(i);
 	}			
 	for(auto &i:dp){
 		s.insert(i);
 	}	
-	return check_possible(s, dp, min, max);	
+	return check_possible(s, origin_s, dp, min, max);	
 }
 
 int main(void){
 	int answer = 0;
-	int min_weight = 1;
-	int max_weight = 15;
+	int min_weight = 10;
+	int max_weight = 33;
 	clock_t start, finish;
 	vector<int> balance_weight = {1,2,4,8};	
 	
@@ -109,4 +114,4 @@ int main(void){
 	finish = clock();
 	cout << "duration : " << (double)(finish - start) / CLOCKS_PER_SEC << endl;
 	return 0;
-}
+}	
