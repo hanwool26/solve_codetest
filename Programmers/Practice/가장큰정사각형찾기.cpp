@@ -1,15 +1,14 @@
-/*
-URL : https://programmers.co.kr/learn/courses/30/lessons/12905
-*/
-
 #include <iostream>
 #include <vector>
 using namespace std;
 
-int get_square(vector<vector<int>> board, int start_x, int start_y, int end_x, int end_y){	
+int get_square(vector<vector<int>> &board, int start_x, int start_y, 
+		int end_x, int end_y, int max_size){	
 	// cout << start_x << ", " << start_y << " / " << end_x << ", " << end_y << endl;
 	int N = min(end_x-start_x, end_y-start_y);	
-	
+	if(N < max_size){
+		return max_size;
+	}
 	for(int i = start_x; i<start_x+N; i++){
 		for(int j = start_y; j<start_y+N; j++){
 			if(board[i][j] == 0){
@@ -17,7 +16,7 @@ int get_square(vector<vector<int>> board, int start_x, int start_y, int end_x, i
 			}
 		}
 	}
-	return N*N;
+	return N;
 }
 
 int solution(vector<vector<int>> board)
@@ -25,10 +24,7 @@ int solution(vector<vector<int>> board)
 	int answer = 0;
 	int size_x = board.size();
 	int size_y = board[0].size();
-	
-	vector<vector<int>> copy_board;
-	copy_board.assign(board.begin(), board.end());
-	
+
 	int dir_x;
 	int dir_y;	
 	int max_size = 0;
@@ -40,15 +36,12 @@ int solution(vector<vector<int>> board)
 				dir_x = i;
 				dir_y = j;
 				
-				while(dir_x < size_x && board[dir_x][j]!=0){
-					dir_x++;
-					
-				}				
-				while(dir_y < size_y && board[i][dir_y]!=0){
-					dir_y++;					
-				}
-				//cout << i << ", " << j << " / " << dir_x << ", " << dir_y << endl;
-				compare_temp = get_square(copy_board,i,j,dir_x,dir_y);
+				while(dir_y < size_y && board[i][dir_y]!=0 &&
+				dir_x < size_x && board[dir_x][j]!=0){
+					dir_x++;		
+					dir_y++;			
+				}	                
+				compare_temp = get_square(board,i,j,dir_x,dir_y, max_size);
 				if(max_size < compare_temp){
 					max_size = compare_temp;
 				}
@@ -56,11 +49,5 @@ int solution(vector<vector<int>> board)
 			}
 		}
 	}
-    return max_size;
-}
-
-int main(void){
-	vector<vector<int>> board = {{0,1,1,1},{1,1,1,1},{1,1,1,1},{0,0,1,0}};
-	cout << solution(board);
-	return 0;
+    return max_size*max_size;
 }
