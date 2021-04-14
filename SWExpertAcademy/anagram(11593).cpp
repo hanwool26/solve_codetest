@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include <cstdio>   // freopen
 #include <unordered_map>
 #include <unordered_set>
@@ -8,7 +7,7 @@
 using namespace std;
 
 int factorial(int num){
-	if(num == 1){
+	if(num == 1 || num == 0){
 		return 1;
 	}
 	return num*factorial(num-1);
@@ -44,8 +43,7 @@ int solution(string arr){
 		map[arr[i]]--;
 		if(bottom !=0) answer += ((prefix*up)/bottom);
 		//cout << "answer : " << answer << " up : " << up << " bottom : " << bottom << endl;
-	}
-	
+	}	
 	return answer; 
 }
 int main(int argc, char** argv)
@@ -53,11 +51,10 @@ int main(int argc, char** argv)
 	int test_case;
 	int T;
 	clock_t start, end;
-    string temp;
-    string arr;
+	string arr;
 
-    ios::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
+	ios::sync_with_stdio(false);
+	cin.tie(0); cout.tie(0);
 
 	freopen("input.txt", "r", stdin);
 	/*
