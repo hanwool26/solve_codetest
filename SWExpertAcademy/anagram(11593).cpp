@@ -6,10 +6,6 @@
 
 using namespace std;
 
-int count = 0;
-unordered_set<string> us;
-
-
 void DFS(string &temp, string arr, vector<bool> &select, int cnt, int num, unordered_set<string> &set){
 	if(cnt == num){
 		if( arr > temp){
@@ -33,12 +29,10 @@ int main(int argc, char** argv)
 	int T;
 	clock_t start, end;
     string temp;
-    string arr;
-    
+    string arr;    
 
     ios::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
-
 	freopen("input.txt", "r", stdin);
 	cin>>T;
 	/*
