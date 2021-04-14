@@ -17,19 +17,17 @@ int factorial(int num){
 int solution(string arr){
 	int answer = 0;
 	int string_size = arr.length();
-	int prefix = 0;
 	unordered_map<char, int> map;
 	unordered_set<char> check_dup;
-	int bottom = 1;
-	int up = 1;
+	
 	for(auto &i:arr){
 		map[i]++;
 	}
 	
 	for(int i=0; i<string_size-1; i++){
 		int prefix = 0;
-		bottom = 0;
-		up = factorial(string_size-i-1);
+		int bottom = 0;
+		int up = factorial(string_size-i-1);
 		for(int j=i+1; j<string_size; j++){			
 			if((arr[i] > arr[j]) && (check_dup.find(arr[j])==check_dup.end())){
 				bottom = 1;
