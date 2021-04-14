@@ -1,52 +1,80 @@
 #include <iostream>
 #include <vector>
 #include <cstdio>   // freopen
+#include <unordered_map>
 #include <unordered_set>
 #include <ctime>
 
 using namespace std;
 
-void DFS(string &temp, string arr, vector<bool> &select, int cnt, int num, unordered_set<string> &set){
-	if(cnt == num){
-		if( arr > temp){
-			set.insert(temp);
-		}
-		return;
+int factorial(int num){
+	if(num == 1){
+		return 1;
 	}
-	for(int i=0; i<arr.length(); i++){
-		if(select[i] == true) continue;
-		select[i] = true;
-		temp.push_back(arr[i]);
-		DFS(temp, arr, select, cnt+1, num, set);
-		temp.pop_back();
-		select[i] = false;
-	}
+	return num*factorial(num-1);
 }
 
+int solution(string arr){
+	int answer = 0;
+	int string_size = arr.length();
+	int prefix = 0;
+	unordered_map<char, int> map;
+	unordered_set<char> check_dup;
+	int bottom = 1;
+	int up = 1;
+	for(auto &i:arr){
+		map[i]++;
+	}
+	
+	for(int i=0; i<string_size-1; i++){
+		int prefix = 0;
+		bottom = 0;
+		up = factorial(string_size-i-1);
+		for(int j=i+1; j<string_size; j++){			
+			if((arr[i] > arr[j]) && (check_dup.find(arr[j])==check_dup.end())){
+				bottom = 1;
+				check_dup.insert(arr[j]);
+				map[arr[j]]--;
+				for(int c='A'; c<='Z'; c++){
+					if(map.find(c)!=map.end() && map[c] > 0) bottom *= factorial(map[c]);	
+				}
+				prefix++;
+				map[arr[j]]++;
+			}			
+		}
+		check_dup.clear();
+		map[arr[i]]--;
+		if(bottom !=0) answer += ((prefix*up)/bottom);
+		//cout << "answer : " << answer << " up : " << up << " bottom : " << bottom << endl;
+	}
+	
+	return answer; 
+}
 int main(int argc, char** argv)
 {
 	int test_case;
 	int T;
 	clock_t start, end;
-	string temp;
-	string arr;    
-	
-	ios::sync_with_stdio(false);
-	cin.tie(0); cout.tie(0);
+    string temp;
+    string arr;
+
+    ios::sync_with_stdio(false);
+    cin.tie(0); cout.tie(0);
+
 	freopen("input.txt", "r", stdin);
-	cin>>T;
 	/*
-	   여러 개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
+	3
+	ABC
+	DCBA
+	BANANA
 	*/
+	cin>>T;
+
 	start = clock();
 	for(test_case = 1; test_case <= T; ++test_case)
 	{
-        int count = 0;
-        unordered_set<string> set;
         cin >> arr;
-        vector<bool> select(arr.length(), false);
-        DFS(temp, arr, select, 0, arr.length(), set);
-        cout << "#" << test_case << " " << set.size() << endl;
+        cout << "#" << test_case << " " << solution(arr) << endl;
 	}	
 	end = clock();
 	cout << "duration : " << (double)(end-start) / CLOCKS_PER_SEC;
