@@ -28,11 +28,11 @@ int main(int argc, char** argv)
 	int test_case;
 	int T;
 	clock_t start, end;
-    string temp;
-    string arr;    
-
-    ios::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
+	string temp;
+	string arr;    
+	
+	ios::sync_with_stdio(false);
+	cin.tie(0); cout.tie(0);
 	freopen("input.txt", "r", stdin);
 	cin>>T;
 	/*
