@@ -1,4 +1,5 @@
 // No. 1245
+
 #include <iostream>
 #include <cstdio>
 #include <string>
@@ -6,7 +7,6 @@
 #include <cmath>
 #include <vector>
 
-#define INF 1000000000000
 using namespace std;
 
 double binarySearch( long double x1,  long double x2, int m1, int m2, int y){
@@ -18,21 +18,20 @@ double binarySearch( long double x1,  long double x2, int m1, int m2, int y){
 	long double x2_f = m2/pow((y-d),2);
 	cout << fixed;
 	cout.precision(11);
-	// cout << "d : " << d << " " <<  (x1_f - x2_f) << endl;
+	cout << "d : " << d << " " <<  (x1_f - x2_f) << endl;
 	cout.unsetf(ios::fixed);
 	
 	if(abs(x1_f - x2_f)<=0.1){
-		return d;
+		return d;		
 	} else if ( x1_f - x2_f < 0 && abs(x1_f - x2_f) > 0.1){
-		x2 = x1 + d - 0.000000001;
-		// cout << "x2 : " << x2 << endl;
+		x2 = x1 + d - 0.0000000001;
+		cout << "x2 : " << x2 << endl;
 		return binarySearch(x1, x2, m1, m2, y);
 	} else if ( x1_f - x2_f > 0 && abs(x1_f - x2_f) > 0.1){
-		x1 = x1 + d + 0.000000001;
-		// cout << "x1 : " << x1 << endl;
+		x1 = x1 + d + 0.0000000001;
+		cout << "x1 : " << x1 << endl;
 		return binarySearch(x1, x2, m1, m2, y);
 	}	
-	
 }
 
 int main(int argc, char** argv)
@@ -43,6 +42,9 @@ int main(int argc, char** argv)
 	vector<int> v;
 	char buffer[256];
 	istringstream ss;
+	
+	//	ios::sync_with_stdio(false);
+	// cin.tie(0); cout.tie(0);
 	
 	freopen("input.txt", "r", stdin);
 	cin>>T;
