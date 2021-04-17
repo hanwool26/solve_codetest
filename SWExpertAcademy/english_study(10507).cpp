@@ -62,7 +62,5 @@ int main(int argc, char** argv)
     end = clock();
 
     cout << "duration : " << (double)(end-start) / CLOCKS_PER_SEC << endl;
-
-
 	return 0;//정상종료시 반드시 0을 리턴해야합니다.
 }
