@@ -7,10 +7,11 @@ int main(int argc, char** argv)
 {
 	int test_case;
 	int T;
-  int n;
-  ios::sync_with_stdio(false);
-  cin.tie(0); cout.tie(0);
-  freopen("sushi_input.txt", "r", stdin);
+	int n;
+	ios::sync_with_stdio(false);
+	cin.tie(0); cout.tie(0);
+	
+	freopen("sushi_input.txt", "r", stdin);
 	cin>>T;
 	/*
 	   여러 개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
