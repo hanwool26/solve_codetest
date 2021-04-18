@@ -11,11 +11,9 @@ int solution(vector<int> v, int n, int p){
     queue<pair<int, int>> q;
     int max_day = 0;
     int idx = 0;
-    cout << min_value << " " << max_value << " " << p << endl;
+    int max_idx = max_value+p;
 
-    cout << "max : " << max_value+p << endl;
-    for(int i=0; i<=max_value+p; i++){     
-        cout << i << endl;   
+    for(int i=0; i<=max_idx; i++){     
         if(i==v[idx]){
             q.push(make_pair(i, 1));
             idx++;
@@ -40,10 +38,7 @@ int main(int argc, char** argv)
 {
 	int test_case;
 	int T;
-    clock_t start, end;
-
-    start = clock();
-
+	
 	freopen("english_study.txt", "r", stdin);
 	cin>>T;
 	for(test_case = 1; test_case <= T; ++test_case)
@@ -55,14 +50,11 @@ int main(int argc, char** argv)
 
         cin >> n;
         cin >> p;
-        cout << n << " " << p << endl;
         for(int i=0; i<n; i++){
             cin >> day;
             v.push_back(day);            
         }
         cout << "#" << test_case << " " << solution(v, n, p) << endl;
 	}
-    end = clock();
-    cout << "duration : " << (double)(end-start) / CLOCKS_PER_SEC << endl;
-	return 0;//정상종료시 반드시 0을 리턴해야합니다.
+    	return 0;//정상종료시 반드시 0을 리턴해야합니다.
 }
