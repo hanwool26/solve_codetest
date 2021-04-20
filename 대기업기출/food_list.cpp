@@ -1,11 +1,8 @@
 #include <iostream>
 #include <vector>
-
 using namespace std;
 
-
 vector<int> food_list[3];
-
 void DFS(vector<vector<int>> food, vector<int> nutri_v[], vector<bool>& select, int idx, int cnt, int num) {
 	if (cnt == num) {
 		int f = 0;
