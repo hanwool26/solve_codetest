@@ -5,7 +5,6 @@
 using namespace std;
 
 int dp[1000];
-bool origin[1000];
 int op[5];
 int num[10];
 int resource[1000]; 
@@ -38,8 +37,8 @@ typedef class vector{
 
 void init_testcase(){
 	for(int i=0; i<1000; i++){
-		dp[i] = origin[i] = 0;	
-		//resource[i]=0;	
+		dp[i] = 0;	
+		resource[i]=0;	
 	}
 	for(int i=1; i<5; i++){
 		op[i] = 0;
@@ -49,82 +48,72 @@ void init_testcase(){
 		visit[i] = false;
 	}	
 	resource_index=0;	
-	answer=21;
+	answer=-1;
 }
 
-void solution(int l, int cnt, bool flag){
-	if( cnt+flag > M || cnt+flag > answer) return;
-	if (l==W) {
-		answer = cnt + flag;
+void solution(int cnt, int num, int idx){
+	//cout << "soltuion" << endl;
+	int temp;
+	int cnt_temp;
+	if(num < 0 || num > 999 || cnt > M) {
+		//cout << "invalid num : " << num << " " << cnt << " " << M << endl;
+		return;
+	}	
+	/*
+	if(dp[num]!=1){
+		dp[num]=1;
+		resource[resource_index++]=num;
+		cout << "input : " << num << endl;
+	}
+	*/
+	if(dp[W] == 1) {
+		answer=cnt+1;
+		//cout << "answer : " << answer << endl;
 		return;
 	}
 	
-	for(int i=0; i<1000; i++) {
-		if(!dp[i] || !origin[i]) continue;
-		for(int j=1; j<5; j++){
-			if(!op[j]) continue;
-			if(i==0 && j==4) continue;
-			
-			int temp;
-			if(j==1) temp = l+i;
-			else if(j==2) temp = l-i;
-			else if(j==3) temp = l*i;
-			else if(j==4) temp = l/i;
-			
-			if(temp<0 || temp >999) continue;
-			if(dp[temp]==0 || dp[temp] > cnt+dp[i]+1){
-				dp[temp] = cnt+dp[i]+1;
-				solution(temp, dp[temp], 1);
+	for(int i=0; i<resource_index; i++){
+		for(int j=0; j<resource_index; j++){
+			//cout << resource[i] << " " << resource[j] << " " << resource_index <<  endl;
+			//if(cnt+to_string(resource[i]).length()+to_string(resource[j]).length() > M) break;
+			if(op[1]==true) { // +
+				temp = resource[i]+resource[j];	
+				if(temp < 1000 && dp[temp]==0) 
+				{
+					resource[resource_index++]=temp;
+					dp[temp]=1;
+				}
+				//solution(cnt+1, temp, j);				
 			}
-		}
-	}
+			if(op[2]==true) { // -
+				temp = resource[j]-resource[i];
+				if(temp > 0 && dp[temp]==0) {
+					resource[resource_index++]=temp;
+					dp[temp]=1;
+				}
+				//solution(cnt+1, temp, j);
+			}
+			if(op[3]==true) { // *
+				temp = resource[i]*resource[j];
+				if(resource[i] == 16 && resource[j]==62) cout << "found" << endl;
+				if(temp <1000 && dp[temp]==0) {
+					resource[resource_index++]=temp;
+					dp[temp]=1;
+				}
+				//solution(cnt+1, temp, j);
+			}
+			if(op[4]==true) { // /
+				if(resource[i]!=0 && dp[temp]==0){
+					temp = resource[j]/resource[i];
+				 	resource[resource_index++]=temp;
+				 	dp[temp]=1;
+				}
+				//solution(cnt+1, temp, j);
+			}			
+		}					
+	}	
+	//solution(cnt+1, 0, 0);
 }
-
-void dfs(int l, int cnt, bool flag) {
-    if (cnt+flag > M || cnt+flag > answer) return;
-    if (l == W) {
-        answer = cnt + flag;
-        return;
-    }
- 
-    for (int i = 0; i < 1000; i++) {
-        if (!dp[i] || !origin[i]) continue;
-        for (int j = 0; j < 4; j++) {
-            if (!op[j]) continue;
-            if (i == 0 && j == 3) continue;
- 
-            int tmp;
-            if (j == 0) tmp = l + i;
-            else if (j == 1) tmp = l - i;
-            else if (j == 2) tmp = l * i;
-            else if (j == 3) tmp = l / i;
- 
-            if (tmp < 0 || tmp > 999) continue;
-            if (dp[tmp] == 0 || dp[tmp] > cnt + dp[i] + 1) {
-                dp[tmp] = cnt + dp[i] + 1;
-                dfs(tmp, dp[tmp], 1);
-            }
-        }
-    }
-}
-	
-void makeL(int l, int cnt) {
-    if (cnt == 0) {
-        if (num[0]) {
-            origin[0] = dp[0] = 1;
-        }
-        for (int i = 1; i < 10; i++)
-            if (num[i]) makeL(i, 1);
-        return;
-    }
- 
-    if (!dp[l])  origin[l] = dp[l] = cnt;
-    else if (dp[l] > cnt) origin[l] = dp[l] = cnt;
- 
-    if (l > 99) return;
-    for (int i = 0; i < 10; i++)
-        if (num[i]) makeL(l * 10 + i, cnt + 1);
-}		
 
 /* 주어진 숫자로 연산자 없이 만들 수 있는 수 */ 
 void make_number(vector &temp, bool visit_[], int cnt, int N, int target){
@@ -135,8 +124,8 @@ void make_number(vector &temp, bool visit_[], int cnt, int N, int target){
 			str_temp += to_string(temp.arr[i]);			
 		}		
 		int_temp = stoi(str_temp);
-		dp[int_temp] = to_string(int_temp).length();	
-		origin[int_temp] = to_string(int_temp).length();
+		dp[int_temp] = to_string(int_temp).length();
+		
 		resource[resource_index++] = int_temp;		
 		return;
 	}
@@ -167,23 +156,21 @@ int main(){
 		init_testcase();
 		for(int i=0; i<N; i++){
 			cin >> temp;
-			num[temp]=1;
+			num[i]=temp;
 			resource[resource_index++]=temp;
-			//dp[temp]=1;
+			dp[temp]=1;
 		}
 		for(int i=0; i<O; i++){
 			cin >> temp;
 			op[temp]=1;
 		}
 		cin >> W;
-		makeL(0,0);
-	//	for(int i=1; i<=3; i++) make_number(v_temp, visit, 0, N, i);
+		for(int i=2; i<=3; i++) make_number(v_temp, visit, 0, N, i);
 		if(dp[W]>0){
-			//cout << dp[W] << endl;
+			cout << dp[W] << endl;
 			answer = dp[W];
 		}else{
-			for(int i=0; i<1000; i++)
-			if(dp[i] && origin[i]) dfs(i, dp[i], 0);						
+			//solution(0, 0, 0);				
 		}
 		cout << "#" << testcase+1 << " " << answer << endl;
 	}	
