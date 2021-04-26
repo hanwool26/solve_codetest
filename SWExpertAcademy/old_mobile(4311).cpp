@@ -5,10 +5,8 @@
 using namespace std;
 
 int dp[1000];
-int op[5];
+bool op[5];
 int num[10];
-int resource[1000]; 
-int resource_index;
 bool visit[10];
 int answer;
 int N, O, M, W;
@@ -38,81 +36,41 @@ typedef class vector{
 void init_testcase(){
 	for(int i=0; i<1000; i++){
 		dp[i] = 0;	
-		resource[i]=0;	
 	}
 	for(int i=1; i<5; i++){
-		op[i] = 0;
+		op[i] = false;
 	}
 	for(int i=0; i<9; i++){
 		num[i] =0;
 		visit[i] = false;
 	}	
-	resource_index=0;	
-	answer=-1;
+	answer= 21;
 }
 
-void solution(int cnt, int num, int idx){
-	//cout << "soltuion" << endl;
-	int temp;
-	int cnt_temp;
-	if(num < 0 || num > 999 || cnt > M) {
-		//cout << "invalid num : " << num << " " << cnt << " " << M << endl;
-		return;
-	}	
-	/*
-	if(dp[num]!=1){
-		dp[num]=1;
-		resource[resource_index++]=num;
-		cout << "input : " << num << endl;
-	}
-	*/
-	if(dp[W] == 1) {
-		answer=cnt+1;
-		//cout << "answer : " << answer << endl;
+void solution(int num, int cnt, bool flag){
+	if (cnt + flag > M || cnt+flag > answer) return;
+	if (num == W) {	
+		answer = cnt + flag;
 		return;
 	}
 	
-	for(int i=0; i<resource_index; i++){
-		for(int j=0; j<resource_index; j++){
-			//cout << resource[i] << " " << resource[j] << " " << resource_index <<  endl;
-			//if(cnt+to_string(resource[i]).length()+to_string(resource[j]).length() > M) break;
-			if(op[1]==true) { // +
-				temp = resource[i]+resource[j];	
-				if(temp < 1000 && dp[temp]==0) 
-				{
-					resource[resource_index++]=temp;
-					dp[temp]=1;
-				}
-				//solution(cnt+1, temp, j);				
+	for(int i=0; i<1000; i++){		
+		if(!dp[i]) continue;		
+		for(int j=1; j<5; j++) {
+			if(!op[j])continue;
+			if(i==0 && j==4) continue;			
+			int temp;
+			if(j==1) temp = num+i;
+			else if(j==2) temp = num-i;
+			else if(j==3) temp = num*i;
+			else if(j==4) temp = num/i;			
+			if(temp < 0 || temp > 999) continue;
+			if(dp[temp] == 0 || dp[temp] > cnt+dp[i]+1) {				
+				dp[temp] = cnt + dp[i] + 1;
+				solution(temp, dp[temp], 1);
 			}
-			if(op[2]==true) { // -
-				temp = resource[j]-resource[i];
-				if(temp > 0 && dp[temp]==0) {
-					resource[resource_index++]=temp;
-					dp[temp]=1;
-				}
-				//solution(cnt+1, temp, j);
-			}
-			if(op[3]==true) { // *
-				temp = resource[i]*resource[j];
-				if(resource[i] == 16 && resource[j]==62) cout << "found" << endl;
-				if(temp <1000 && dp[temp]==0) {
-					resource[resource_index++]=temp;
-					dp[temp]=1;
-				}
-				//solution(cnt+1, temp, j);
-			}
-			if(op[4]==true) { // /
-				if(resource[i]!=0 && dp[temp]==0){
-					temp = resource[j]/resource[i];
-				 	resource[resource_index++]=temp;
-				 	dp[temp]=1;
-				}
-				//solution(cnt+1, temp, j);
-			}			
-		}					
+		}
 	}	
-	//solution(cnt+1, 0, 0);
 }
 
 /* 주어진 숫자로 연산자 없이 만들 수 있는 수 */ 
@@ -124,9 +82,7 @@ void make_number(vector &temp, bool visit_[], int cnt, int N, int target){
 			str_temp += to_string(temp.arr[i]);			
 		}		
 		int_temp = stoi(str_temp);
-		dp[int_temp] = to_string(int_temp).length();
-		
-		resource[resource_index++] = int_temp;		
+		dp[int_temp] = to_string(int_temp).length();			
 		return;
 	}
 	for(int i=0; i<N; i++){
@@ -148,31 +104,33 @@ int main(){
 	
 	cin >> T;
 	
-	for(int testcase=0; testcase < T; testcase++){
-		
-		cin >> N >> O >> M;
-		vector v_temp;
-		
+	for(int testcase=0; testcase < T; testcase++){		
+		cin >> N >> O >> M;		
 		init_testcase();
 		for(int i=0; i<N; i++){
 			cin >> temp;
 			num[i]=temp;
-			resource[resource_index++]=temp;
 			dp[temp]=1;
 		}
 		for(int i=0; i<O; i++){
 			cin >> temp;
-			op[temp]=1;
+			op[temp]=true;
 		}
 		cin >> W;
 		for(int i=2; i<=3; i++) make_number(v_temp, visit, 0, N, i);
 		if(dp[W]>0){
-			cout << dp[W] << endl;
+			// cout << dp[W] << endl;
 			answer = dp[W];
 		}else{
-			//solution(0, 0, 0);				
+			for(int i=0; i<1000; i++){
+				
+				if(dp[i]) {
+					//cout << i << " ";
+					solution(i, dp[i], 0);	
+				}
+			}
 		}
-		cout << "#" << testcase+1 << " " << answer << endl;
+		cout << "#" << testcase+1 << " " << (answer==21 ? -1 : answer) << endl;
 	}	
 	return 0;
 }
