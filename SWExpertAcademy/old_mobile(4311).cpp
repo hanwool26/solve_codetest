@@ -5,6 +5,7 @@
 using namespace std;
 
 int dp[1000];
+int origin[1000];
 bool op[5];
 int num[10];
 bool visit[10];
@@ -35,7 +36,7 @@ typedef class vector{
 
 void init_testcase(){
 	for(int i=0; i<1000; i++){
-		dp[i] = 0;	
+		dp[i] = origin[i] = 0;
 	}
 	for(int i=1; i<5; i++){
 		op[i] = false;
@@ -50,29 +51,33 @@ void init_testcase(){
 void solution(int num, int cnt, bool flag){
 	if (cnt + flag > M || cnt+flag > answer) return;
 	if (num == W) {	
+		
+		cout << dp[16] << " " << dp[62] << " " << dp[992] << " " << dp[W] << endl;
 		answer = cnt + flag;
 		return;
 	}
 	
 	for(int i=0; i<1000; i++){		
-		if(!dp[i]) continue;		
+		if(!dp[i] || !origin[i]) continue;		
 		for(int j=1; j<5; j++) {
 			if(!op[j])continue;
-			if(i==0 && j==4) continue;			
+			if(i==0 && j==4) continue;
+			
 			int temp;
 			if(j==1) temp = num+i;
 			else if(j==2) temp = num-i;
 			else if(j==3) temp = num*i;
-			else if(j==4) temp = num/i;			
+			else if(j==4) temp = num/i;
+			
 			if(temp < 0 || temp > 999) continue;
-			if(dp[temp] == 0 || dp[temp] > cnt+dp[i]+1) {				
+			if(dp[temp] == 0 || dp[temp] > cnt+dp[i]+1) {
+				
 				dp[temp] = cnt + dp[i] + 1;
 				solution(temp, dp[temp], 1);
 			}
 		}
 	}	
 }
-
 /* 주어진 숫자로 연산자 없이 만들 수 있는 수 */ 
 void make_number(vector &temp, bool visit_[], int cnt, int N, int target){
 	if(cnt == target){
@@ -82,7 +87,8 @@ void make_number(vector &temp, bool visit_[], int cnt, int N, int target){
 			str_temp += to_string(temp.arr[i]);			
 		}		
 		int_temp = stoi(str_temp);
-		dp[int_temp] = to_string(int_temp).length();			
+		dp[int_temp] = to_string(int_temp).length();	
+		origin[int_temp] = 1;		
 		return;
 	}
 	for(int i=0; i<N; i++){
@@ -104,13 +110,16 @@ int main(){
 	
 	cin >> T;
 	
-	for(int testcase=0; testcase < T; testcase++){		
-		cin >> N >> O >> M;		
+	for(int testcase=0; testcase < T; testcase++){
+		
+		cin >> N >> O >> M;
+		vector v_temp;
+		
 		init_testcase();
 		for(int i=0; i<N; i++){
 			cin >> temp;
 			num[i]=temp;
-			dp[temp]=1;
+			dp[temp]=origin[temp]=1;
 		}
 		for(int i=0; i<O; i++){
 			cin >> temp;
@@ -119,13 +128,12 @@ int main(){
 		cin >> W;
 		for(int i=2; i<=3; i++) make_number(v_temp, visit, 0, N, i);
 		if(dp[W]>0){
-			// cout << dp[W] << endl;
 			answer = dp[W];
 		}else{
 			for(int i=0; i<1000; i++){
-				
-				if(dp[i]) {
-					//cout << i << " ";
+				//cout << i << " " << dp[i] << endl;
+				if(dp[i] && origin[i]) {
+					//cout << i << " ";					
 					solution(i, dp[i], 0);	
 				}
 			}
