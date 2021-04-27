@@ -18,18 +18,18 @@ int solution(int (*wapper)[25], int X, int Y){
 	
 	for(int i=0; i<X; i++){
 		for(int j=0; j<Y; j++){
-			if(wapper[i][j]==0){
+			if(wapper[i][j]>=0){
 				if(i-1>=0 && j-1>=0) {
-					if (wapper[i-1][j]==0 && wapper[i][j-1]==0 && wapper[i-1][j-1]==0){
-						wapper[i-1][j]=wapper[i][j-1]=wapper[i-1][j-1]=wapper[i][j]=cnt;
-						cnt++;
-						
+					if (wapper[i-1][j]>=0 && wapper[i][j-1]>=0 && wapper[i-1][j-1]>=0){
+						wapper[i-1][j]++;
+						wapper[i][j-1]++;
+						wapper[i-1][j-1]++;
+						wapper[i][j]++;
 					}
 				}
 			}
 		}
 	}
-	
 	return cnt;
 }
 
@@ -51,6 +51,7 @@ int main(){
 		for(int i=0; i<X; i++){
 			for(int j=0; j<Y; j++){
 				cin >> input;
+				if (input == 1) input = -1;
 				wapper[i][j] = input;
 			}
 		}
