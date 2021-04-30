@@ -102,7 +102,6 @@ int solution(int (*wapper)[25], int X, int Y){
 		}
 	}
 	print_wapper(wapper, X, Y);
-
 	return cnt;
 }
 
@@ -141,12 +140,12 @@ int main(){
 
 # ====================================================================================
 # Using DFS Algorithm with Backtracking for finding out solution and meeting time limit
-
 #include <iostream>
 
 using namespace std;
 
 int arr[10][25];
+int dp[1024][25];
 int answer;
 int N, M;
 
@@ -156,6 +155,12 @@ void init_case(){
 			arr[i][j] = 0;
 		}
 	}	
+	
+	for(int i=0; i<1024; i++){
+		for(int j=0; j<25; j++){
+			dp[i][j] = -1;
+		}
+	}
 	answer = 0;
 	N=0;
 	M=0;
@@ -192,8 +197,15 @@ void solution(int x, int y, int cnt)
 		}
 		return;
 	}
-	# Need to back traking technique in order to meet time limit. 
-	
+	// Need to back traking technique in order to meet time limit. 
+	if( x==0 ){
+		int b=0;
+		for(int i=0; i<N; i++){
+			b |= (arr[i][y] << i);
+		}
+		if (dp[b][y] >= cnt) return;
+		else dp[b][y] = cnt;
+	}	
 	if(isempty(x,y)){
 		arr[x][y] = arr[x+1][y] = arr[x][y+1] = arr[x+1][y+1] = 1;
 		solution(x+2, y, cnt+1);
@@ -223,8 +235,7 @@ int main(){
 				arr[i][j] = input;
 			}
 		}
-		solution(0,0,0);
-		
+		solution(0,0,0);		
 		cout << "#" << tc+1 << " " << answer << endl;
 	}
 	return 0;
