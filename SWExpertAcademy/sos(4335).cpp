@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 typedef struct Box{
@@ -16,36 +17,46 @@ void print_box(){
 	}
 }
 
-bool is_below(int idx, int cp_idx){ // cp_idx : compared_idx
+int is_below(int idx, int cp_idx){ // cp_idx : compared_idx
 	int dp[3] = { 0, };
+	int cnt = 0;
+	int remain = 0;
 	for (int i = 0; i < 3; i++){
 		for (int j = 0; j < 3; j++){
-			if (box[idx][i] < box[cp_idx][j] && dp[j] == 0){
+			if (box[idx][i] <= box[cp_idx][j] && dp[j] == 0){
 				dp[j] = box[cp_idx][j];
+				cnt++;
 			}
+
 		}
 	}
-	for (int i = 0; i<3; i++){
-		cout << dp[i] << " ";
+	if (cnt == 2){
+		for (int i = 0; i < 3; i++){
+			if (box[cp_idx][i] != dp[0] && box[cp_idx][i] != dp[1])
+				remain = box[cp_idx][i];
+		}
 	}
-	return true;
+	if (cnt == 3){
+		remain = *max_element(dp, dp + 3);
+	}
+	cout << "remain : " << remain << endl;
+	return remain;
 }
-/*
+
 void DFS(int idx, int cnt, int sum){
 	if (cnt == N) return;
 	if (sum > answer) sum = answer; 
 
 	for (int i = 0; i < N; i++){
-		if (is_below(idx, i)){
-
+		if (is_below(idx, i) != 0) continue;
+		else {
+		}
 		}
 	}
-
 }
-*/
+
 int main()
-{
-	
+{	
 	ios::sync_with_stdio(false);
 	cin.tie(0); cout.tie(0);
 
