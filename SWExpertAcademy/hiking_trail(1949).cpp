@@ -1,35 +1,21 @@
 #include <iostream>
-#include <vector>
-#include <utility>
 
 using namespace std;
 
 #define MAX_N 8
 int N, K, answer, max_val, max_size;// 3<=N<=8, 1<=K<=5
 int trail[MAX_N][MAX_N];
-
-int start_x, start_y;
-
-struct start_pos{
+struct pos{
 	int x;
 	int y;
 };
-
-struct start_pos start[5];
-
-void print_trail(){
-	for (int i = 0; i < N; i++){
-		for (int j = 0; j < N; j++){
-			cout << trail[i][j] << " ";
-		}
-		cout << endl;
-	}
-}
+struct pos start[5];
+bool visit[MAX_N][MAX_N];
 
 void init_case(){
 	for (int i = 0; i < MAX_N; i++){
 		for (int j = 0; j < MAX_N; j++){
-			trail[i][j] = 0;
+			trail[i][j] = visit[i][j]= 0;			
 		}
 	}
 	for (int i = 0; i < 5; i++){
@@ -51,15 +37,13 @@ int find_top(){
 }
 
 void DFS(int x, int y, int height, int distance, bool desc){
-	
-
-	//cout << height << " " << desc << " (" << x << "," << y << ")" << " -> ";
-	if (distance!=1 && x == start_x && y == start_y) return;
+	if (visit[x][y] == true) return;
 	
 	if (answer < distance){
 		answer = distance;
 	}
 
+	visit[x][y] = true;
 	if (x-1 >= 0 && height > trail[x-1][y]){
 		DFS(x-1, y, trail[x-1][y], distance + 1, desc);
 	}
@@ -100,7 +84,7 @@ void DFS(int x, int y, int height, int distance, bool desc){
 			}
 		}
 	}
-	//cout << endl;
+	visit[x][y] = false;
 	return;
 }
 
@@ -109,9 +93,7 @@ int main(){
 	ios::sync_with_stdio(false);
 	cin.tie(0); cout.tie(0);
 
-	freopen("hiking_trail_input.txt", "r", stdin);
-
-	cin >> T;
+    cin >> T;
 	for (int tc = 0; tc < T; tc++){
 		int top_size;
 		init_case();
@@ -125,10 +107,7 @@ int main(){
 		top_size = find_top();
 
 		for (int i = 0; i < top_size; i++){
-			start_x = start[i].x;
-			start_y = start[i].y;
-
-			DFS(start_x, start_y, max_val, 1, false);
+			DFS(start[i].x, start[i].y, max_val, 1, false);
 		}		
 		cout << "#" << tc + 1 << " " << answer << endl;
 	}
