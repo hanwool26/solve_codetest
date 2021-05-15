@@ -1,21 +1,24 @@
 #include <iostream>
-#include <time.h>
 using namespace std;
 
 int map[50][50];
 int visit[50][50];
-int dp[50][50];
+int dp[50][50][4];
 int N;
 int answer = 0;
 
+
 void init_case() {
+	answer = N * N;
 	for (int i = 0; i < 50; i++) {
 		for (int j = 0; j < 50; j++) {
-			map[i][j] = visit[i][j] = dp[i][j] = 0;
+			visit[i][j] = 0;
+			for (int dir = 0; dir < 4; dir++){
+				dp[i][j][dir] = answer;
+			}
 		}
 	}
-	answer = N * N;
-}
+}	
 
 enum direction {
 	UP,
@@ -25,23 +28,27 @@ enum direction {
 };
 
 void DFS(int x, int y, int dir, int cnt) {
-	int temp;
-	if (x < 0 || x > N - 1 || y < 0 || y > N - 1) return;
 	int pipe = map[x][y];
-	if (pipe == 0) return;
+	if (x < 0 || x > N - 1 || y < 0 || y > N - 1 || pipe == 0 || visit[x][y] == 1) return;
+	if (dp[x][y][dir] < cnt) return;
 
-	//printf("(%d,%d) pipe : %d, cnt %d ans : %d dir : %d\n", x, y, pipe, cnt, answer, dir);
-	if (x == N - 1 && y == N - 1 && ((pipe == 1 && dir == RIGHT) || pipe == 6 && dir == DOWN)) {
+	if (x == N - 1 && y == N - 1 && ((pipe == 1 && dir == RIGHT) || pipe == 6 && dir == DOWN) && cnt!=1) {
 		if (answer > cnt) {
 			answer = cnt;
 		}
 		return;
 	}
-	if (visit[x][y] == 1 || dp[x][y] > cnt) return;
+
+	if (x == 0 && y == 0 && ((pipe == 1 && dir == LEFT) || pipe == 4 && dir == UP) && cnt!=1) {
+		if (answer > cnt) {
+			answer = cnt;
+		}
+		return;
+	}
+
 	int next_x, next_y;
 	visit[x][y] = 1;
-	temp = dp[x][y];
-	dp[x][y] = cnt;
+	dp[x][y][dir] = cnt;
 
 	if (pipe <= 2) {
 		if (dir == UP) {
@@ -83,16 +90,12 @@ void DFS(int x, int y, int dir, int cnt) {
 		}
 	}
 	visit[x][y] = 0;
-	dp[x][y] = temp;
 }
 
 int main() {
 	int T;
-	clock_t start, end;
 	ios::sync_with_stdio(false);
 	cin.tie(0); cout.tie(0);
-
-	start = clock();
 	freopen("pipe_connection_input.txt", "r", stdin);
 	cin >> T;
 
@@ -104,10 +107,13 @@ int main() {
 				cin >> map[i][j];
 			}
 		}
+		
 		DFS(0, 0, RIGHT, 1);
+		int a = answer;
+		init_case();
+		DFS(N - 1, N - 1, LEFT, 1);
+		if (answer > a) answer = a;
+		
 		cout << "#" << tc + 1 << " " << answer << endl;
 	}	
-	end = clock();
-	double result = (double)(end - start) / CLOCKS_PER_SEC;
-	cout << result << endl;	
 }
