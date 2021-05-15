@@ -4,13 +4,14 @@ using namespace std;
 
 int map[50][50];
 int visit[50][50];
+int dp[50][50];
 int N;
 int answer = 0;
 
 void init_case() {
 	for (int i = 0; i < 50; i++) {
 		for (int j = 0; j < 50; j++) {
-			map[i][j] = visit[i][j] = 0;
+			map[i][j] = visit[i][j] = dp[i][j] = 0;
 		}
 	}
 	answer = N * N;
@@ -24,20 +25,23 @@ enum direction {
 };
 
 void DFS(int x, int y, int dir, int cnt) {
+	int temp;
 	if (x < 0 || x > N - 1 || y < 0 || y > N - 1) return;
 	int pipe = map[x][y];
 	if (pipe == 0) return;
 
-	// printf("(%d,%d) pipe : %d, cnt %d ans : %d\n", x, y, pipe, cnt, answer);
-	if (x == N - 1 && y == N - 1 && (pipe == 1 || pipe == 6)) {
+	//printf("(%d,%d) pipe : %d, cnt %d ans : %d dir : %d\n", x, y, pipe, cnt, answer, dir);
+	if (x == N - 1 && y == N - 1 && ((pipe == 1 && dir == RIGHT) || pipe == 6 && dir == DOWN)) {
 		if (answer > cnt) {
 			answer = cnt;
 		}
 		return;
 	}
-	if (visit[x][y] == 1) return;
+	if (visit[x][y] == 1 || dp[x][y] > cnt) return;
 	int next_x, next_y;
 	visit[x][y] = 1;
+	temp = dp[x][y];
+	dp[x][y] = cnt;
 
 	if (pipe <= 2) {
 		if (dir == UP) {
@@ -79,16 +83,16 @@ void DFS(int x, int y, int dir, int cnt) {
 		}
 	}
 	visit[x][y] = 0;
+	dp[x][y] = temp;
 }
 
 int main() {
 	int T;
 	clock_t start, end;
-
-	start = clock();
 	ios::sync_with_stdio(false);
 	cin.tie(0); cout.tie(0);
 
+	start = clock();
 	freopen("pipe_connection_input.txt", "r", stdin);
 	cin >> T;
 
@@ -102,8 +106,8 @@ int main() {
 		}
 		DFS(0, 0, RIGHT, 1);
 		cout << "#" << tc + 1 << " " << answer << endl;
-	}
+	}	
 	end = clock();
-	double result = (double)(end - start)/CLOCKS_PER_SEC;
-	cout << result << endl;
+	double result = (double)(end - start) / CLOCKS_PER_SEC;
+	cout << result << endl;	
 }
