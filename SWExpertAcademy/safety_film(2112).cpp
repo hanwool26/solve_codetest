@@ -34,36 +34,40 @@ bool is_pass(int columm) {
 }
 
 void insert_chemicals(int film[13][20], int flag, int row) {
+	print_film(film);
+	cout << "==================================" << endl;
 	for (int i = 0; i < W; i++) {
 		film[row][i] = flag;
 	}
 }
 
-void DFS(int film[13][20], int insert_num, int index) {
+void DFS(int film[13][20], int insert_zero, int insert_one, int index) {
 	int cnt = 0;
-	int (*temp)[20] = film;	// 배열 포인터
+	int(*temp)[20];	// 배열 포인터
 
+	
 	for (int i = 0; i < W; i++) {
 		if (is_pass(i)) {
 			cnt++;
 		}
 	}
 	if (cnt == W) {
-		if (answer > insert_num) {
-			print_film(temp);
-			cout << "==================================" << endl;
-			answer = insert_num;
+
+		if (answer > insert_zero+insert_one) {
+			
+			answer = insert_zero+insert_one;
 		}
 		return;
 	}
+	if (used[index] == 1) return;
 	used[index] = 1;
 	for (int i = 0; i < D; i++) {
-		if (used[i] == 1) continue;
-		
+		temp = film;
 		insert_chemicals(temp, 0, i);	
-		DFS(temp, insert_num + 1, i);
+		DFS(temp, insert_zero + 1, insert_one, i);
+		temp = film;
 		insert_chemicals(temp, 1, i);
-		DFS(temp, insert_num + 1, i);		
+		DFS(temp, insert_zero, insert_one+1, i);		
 	}
 	used[index] = 0;
 }
@@ -88,7 +92,7 @@ int main() {
 			}
 		}
 		//print_film();
-		DFS(film, 0, 0);
+		DFS(film, 0, 0, 0);
 		cout << "#" << tc+1 << " " << answer << endl;
 	}
 }
