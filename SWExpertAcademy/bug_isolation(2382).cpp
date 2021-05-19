@@ -12,6 +12,7 @@ typedef struct MAP{
 }MAP;
 
 MAP map[1000];
+int visit[100][100];
 
 enum direc{
 	UP = 1,
@@ -20,37 +21,35 @@ enum direc{
 	RIGHT
 };
 
-void print(){
+void delete_duplict(){
 	bool flag = false;
 	int temp = 0;
 	int sum = 0;
 	int index;
-	
-	for (int i = 0; i < N; i++){
-		for (int j = 0; j < N; j++){
-			temp = 0;
-			sum = 0;
-			index = -1;
-			for (int k = 0; k < K; k++){		
-				if (map[k].x == i && map[k].y == j){		
-					sum += map[k].number;
-					if (temp < map[k].number){
-						index = k;
-						temp = map[k].number;
-					}
-					map[k].number = 0;
-				}
+
+	for (int i = 0; i < K; i++){
+		temp = 0;
+		sum = 0;
+		index = -1;
+		if (map[i].number == 0)continue;
+		for (int j = 0; j < K; j++){
+			if (map[i].x == map[j].x && map[i].y == map[j].y){
+				sum += map[j].number;
+				if (temp < map[j].number){
+					index = j;
+					temp = map[j].number;
+				}				
+				map[j].number = 0;
 			}
-			if (index != -1) map[index].number = sum;
-		}		
+		}
+		map[index].number = sum;
 	}
 }
 
 int solution(){
 	int number_K = K;
 	int sum = 0;
-	for (int time = 0; time < M; time++){
-		
+	for (int time = 0; time < M; time++){		
 		for (int i = 0; i < number_K; i++){
 			if (map[i].number == 0)continue;
 
@@ -74,7 +73,7 @@ int solution(){
 				else if (map[i].direc == RIGHT) map[i].direc = LEFT;
 			}
 		}
-		print();
+		delete_duplict();
 	}
 	for (int i = 0; i < number_K; i++){
 		sum += map[i].number;
