@@ -22,59 +22,39 @@ TC
 답
 8
 */
-
 #include <iostream>
 using namespace std;
 
 int N;
 int pillar[50];
 int visit[50];
-
 int answer;
 int MAX = 0;
 
-int line_num = 0;
-
-enum FLAG{
-	LEFT,
-	RIGHT
-};
-
-int dp[1000][2];
-int use_dp[10][(1 << 20)-1][2];
-
-void DFS(int index, int sum_l, int sum_r, int use, int flag){
-
-	if ((sum_l == MAX || sum_r == MAX)) return;
-
-	if (use_dp[index][use][LEFT] > sum_l && use_dp[index][use][RIGHT] > sum_r) return;
-	else use_dp[index][use][flag] = flag == LEFT ? sum_l : sum_r;
-
-	if (sum_l == sum_r && index!=0){
+void DFS(int index, int sum_l, int sum_r){
+	if (visit[index] == 1)return;
+	
+	if (sum_l == sum_r && sum_l != 0){
 		if (answer < sum_l){
-			for (int i = 0; i < N; i++){
-				if (visit[i] == 1) cout << pillar[i] << " ";
-			}
-			cout << endl;
+			printf("sum_l : %d, sum_r : %d, L : %d R : %d\n", sum_l, sum_r);
 			answer = sum_l;
 			return;
-		}		
+		}
 	}
-	line_num++;
+
 	visit[index] = 1;
-	for (int i = 0; i < N; i++){
-		if (visit[i] == 1) continue;
-		DFS(i, sum_l + pillar[i], sum_r, use | (1 << i), LEFT);
-		DFS(i, sum_l, sum_r + pillar[i], use | (1 << i), RIGHT);
+	for (int i = index; i < N; i++){
+			DFS(i+1, sum_l + pillar[i], sum_r);
+			DFS(i + 1, sum_l, sum_r + pillar[i]);
 	}
 	visit[index] = 0;
 }
 
 int main()
 {
+	
 	int T;
 	ios::sync_with_stdio(false);
-	cin.tie(0); cout.tie(0);
 
 	freopen("pillar_input.txt", "r", stdin);
 	cin >> T;
@@ -83,13 +63,11 @@ int main()
 		cin >> N;
 		answer = 0;
 		for (int i = 0; i < N; i++){
-			
+
 			cin >> pillar[i];
 			MAX += pillar[i];
 		}
-		cout << "max" << MAX << endl;
-		DFS(0, pillar[0],0, 0, LEFT);
-		DFS(0, 0, pillar[0], 0, RIGHT);
-		cout << "#" << tc + 1 << " " << answer << " " << line_num << endl;
+		DFS(0,0,0);
+		cout << "#" << tc + 1 << " " << answer << " " << endl;
 	}
 }
