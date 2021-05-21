@@ -1,6 +1,7 @@
 #include <iostream>
 #include <queue>
 #include <vector>
+#include <string.h>
 using namespace std;
 
 int N, W, H;
@@ -8,6 +9,7 @@ int answer = 0;
 
 int dir_x[] = { -1, 1, 0, 0 };
 int dir_y[] = { 0, 0, -1, 1 };
+queue<pair<int, int>> q;
 
 void print_map(int(*temp)[20]) {
 	for (int i = 0; i < H; i++) {
@@ -44,60 +46,58 @@ void map_refix(int(*temp)[20]){
 	}
 }
 
-void DFS(int index, int cnt, int(*map)[20]) {
-
-	if (cnt == N) {
-		int count = count_map(map);	
-		if (answer > count) {
-			answer = count;
+void crush(int x, int y, int(*map)[20]){
+	int step = map[x][y];
+	map[x][y] = 0;
+	if (step == 1) return;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 1; j < step; j++) {
+			int next_x = x + dir_x[i] * j;
+			int next_y = y + dir_y[i] * j;
+			if (next_x < 0 || next_x > H - 1 || next_y < 0 || next_y > W - 1 || !map[next_x][next_y]) continue;
+			if (map[next_x][next_y] == 1){
+				map[next_x][next_y] = 0;
+				continue;
+			}
+			q.push({ next_x, next_y });
 		}
+	}
+}
+
+int topPos(int y, int(*map)[20]){
+	for (int i = 0; i < H; i++) {	// H
+		if (map[i][y] > 0) return i;
+	}
+	return -1;
+}
+
+void DFS(int cnt, int(*map)[20]) {
+	if (cnt == N) {	
+		//answer = min(answer, count_map(map));
 		return;
 	}
-	int temp[20][20];
-	memcpy(temp, map, sizeof(temp));
+	else{
+		int temp[20][20] = { 0, };
+		int x, y;
+        memcpy(temp, map, sizeof(int)* 20 * 20);        
+		for (int i = 0; i < W; i++) {	// W
+			// todo : implement queueing. 					
+			x = topPos(i, map);
+			y = i;
+			if (x == -1 || map[x][y] == 0) continue;
+			crush(x, y, map);
+			while (!q.empty()) {
+				x = q.front().first;
+				y = q.front().second;
 
-	queue<pair<int, int>> q;
-	int x, y, next_x, next_y, step;
-	for (int i = 0; i < W; i++) {	// W
-		// todo : implement queueing. 
-		x = H-1;
-		y = i;		
-		for (int j = 0; j < H; j++) {	// H
-			if (map[j][i] == 0) continue;
-			else {
-				x = j;
-				y = i;
-				break;
+				q.pop();
+				crush(x, y, map);
 			}
-		}
-		q.push(make_pair(x, y));
-
-		while (!q.empty()) {			
-			x = q.front().first;
-			y = q.front().second;	
-
-			q.pop();
-			step = map[x][y];
-
-			if (step != 0){
-				map[x][y] = 0;
-				for (int i = 0; i < 4; i++) {
-					next_x = -1;
-					next_y = -1;
-					for (int j = 1; j < step; j++) {
-						next_x = x + dir_x[i] * j;
-						next_y = y + dir_y[i] * j;
-						if (next_x >= 0 && next_x < H && next_y >= 0 && next_y < H && \
-							map[next_x][next_y] != 0){
-							q.push(make_pair(next_x, next_y)); 
-						}
-					}
-				}
-			}
-		}
-		map_refix(map);	
-		DFS(i, cnt + 1, map);	
-		memcpy(map, temp, sizeof(temp));
+			map_refix(map);
+			DFS(cnt + 1, map);
+			answer = min(answer, count_map(map));
+			memcpy(map, temp, sizeof(int)* 20 * 20);
+		}		
 	}	
 }
 
@@ -107,7 +107,7 @@ int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(0); cout.tie(0);
 
-	freopen("tetris.txt", "r", stdin);
+	//freopen("tetris.txt", "r", stdin);
 	cin >> T;
 	for (int tc = 0; tc < T; tc++) {
 
@@ -119,7 +119,7 @@ int main() {
 				cin >> map[i][j];
 			}
 		}
-		DFS(0, 0, map);
+		DFS(0, map);
 		cout << "#" << tc + 1 << " " << answer << endl;
 	}
 }
