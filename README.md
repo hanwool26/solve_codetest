@@ -3,7 +3,7 @@
 
 ## Strategy
 - 완전탐색 최적화
-* https://nsgg.tistory.com/68
+  - https://nsgg.tistory.com/68
 
 ## step1
 - 프로그래머스 challenge 문제 풀이를 통해 각 알고리즘 이해력 향상
