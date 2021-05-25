@@ -1,13 +1,3 @@
-#TC
-1
-7
-1 6 3
-6 5 3
-5 3 2
-5 2 5
-2 4 4
-2 7 2
-
 #include <iostream>
 #include <stack>
 #include <time.h>
@@ -15,9 +5,9 @@ using namespace std;
 
 #define INF int(1e9)
 int N;
-long int graph[1200][1200];
+long int graph[1001][1001];
 long int origin[1001][1001];
-bool visit[1200][1200];
+bool visit[1001][1001];
 
 void print_graph() {
 	for (int i = 0; i < N; i++) {
@@ -41,7 +31,7 @@ void init_case() {
 	}
 }
 
- long int  graph_sum() {
+long int  graph_sum() {
 	long int sum = 0;
 	for (int i = 1; i < N; i++) {
 		for (int j = i + 1; j <= N; j++) {
@@ -53,29 +43,30 @@ void init_case() {
 
 void dfs(int start, int adj, int weight) {
 	if (visit[start][adj] == true) return;
-	printf("before: (%d, %d), weight : %d\n", start, adj, weight);	
-	
+	//printf("before: (%d, %d), weight : %d\n", start, adj, weight);
+
 	if (graph[start][adj] > weight) {
 		graph[start][adj] = graph[adj][start] = weight;
+		weight = graph[adj][start];
+		visit[start][adj] = true;
 	}
 
 	printf("after: (%d, %d), weight : %d\n", start, adj, graph[adj][start]);
-	weight = graph[adj][start];
+	
 	stack <int> s;
 
-	for (int col = start; col <= N; col++) {
+	for (int col = 1; col <= N; col++) {
 		if (col == adj || col == start) continue;
-		if (graph[adj][col]!=INF) {
+		if (graph[adj][col] != INF) {
 			s.push(col);
-			printf("pushed : %d\n", col);
+			//printf("pushed : %d\n", col);
 		}
 	}
 	visit[start][adj] = true;
 	while (!s.empty()) {
 		int node = s.top(); s.pop();
 		//printf("(%d %d) : %d\n", adj, node, graph[adj][node]);
-		//if(visit[adj][node]!=true)
-		dfs(start, node, graph[adj][node] + weight);			
+		dfs(start, node, graph[adj][node] + weight);
 	}
 	visit[start][adj] = false;
 }
@@ -87,7 +78,7 @@ int main() {
 
 	start = clock();
 	int T;
-	freopen("graph_sum.txt", "r", stdin);
+	freopen("graph_sum1.txt", "r", stdin);
 	cin >> T;
 	for (int tc = 0; tc < T; tc++) {
 		init_case();
@@ -96,18 +87,27 @@ int main() {
 		for (int k = 0; k < N; k++) {
 			cin >> i >> j >> w;
 			graph[i][j] = graph[j][i] = w;
+		}		
+		/*
+		for (int i = 1; i <= N; i++){
+			dfs(i, i, 0);
 		}
+		*/
 
-		for (int i = 1; i <= N; i++) {
-			for (int j = 1; j <= N; j++) {
-				if (graph[i][j] == INF) {
-					dfs(i, j, 0);
-					print_graph();
+		/* Fluyd washall algorithm */
+		/*
+		for (int k = 1; k <= N; k++){
+			for (int i = 1; i <= N; i++){
+				for (int j = 1; j <= N; j++){
+					if ((graph[i][j] > graph[i][k] + graph[k][j]) && (graph[i][k] != INF && \
+						graph[k][j] != INF)){
+						graph[i][j] = graph[i][k] + graph[k][j];
+					}
 				}
 			}
-			//dfs(i, i, 0);
-			//
 		}
+		*/
+
 		long int answer = graph_sum();
 		cout << "#" << tc + 1 << " " << answer << endl;
 	}
