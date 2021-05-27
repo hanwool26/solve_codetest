@@ -31,8 +31,13 @@ int visit[50];
 int answer;
 int MAX = 0;
 
+int dp[50][1001][1001];
+
 void DFS(int index, int sum_l, int sum_r) {
-	if (visit[index] == 1)return;
+	if (dp[index][sum_l][sum_r] != 0) {
+		return;
+	}
+	dp[index][sum_l][sum_r] = 1;
 
 	if (sum_l == sum_r && sum_l != 0) {
 		if (answer < sum_l) {
@@ -41,19 +46,15 @@ void DFS(int index, int sum_l, int sum_r) {
 			return;
 		}
 	}
-
-	visit[index] = 1;
 	for (int i = index; i < N; i++) {
 		DFS(i + 1, sum_l + pillar[i], sum_r);
-		DFS(i + 1, sum_l, sum_r);	// skip 가능한 기둥이 존재 
+		DFS(i + 1, sum_l, sum_r);
 		DFS(i + 1, sum_l, sum_r + pillar[i]);
 	}
-	visit[index] = 0;
 }
 
 int main()
 {
-
 	int T;
 	ios::sync_with_stdio(false);
 
@@ -64,7 +65,6 @@ int main()
 		cin >> N;
 		answer = 0;
 		for (int i = 0; i < N; i++) {
-
 			cin >> pillar[i];
 			MAX += pillar[i];
 		}
