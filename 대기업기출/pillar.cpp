@@ -16,7 +16,7 @@ N개의 기둥의 높이가 주어지는데 기둥을 합쳐서 높이가 최대
 출력 : 기둥 높이 최댓값
 
 TC
-5 
+5
 1 2 4 3 6
 
 답
@@ -31,43 +31,44 @@ int visit[50];
 int answer;
 int MAX = 0;
 
-void DFS(int index, int sum_l, int sum_r){
+void DFS(int index, int sum_l, int sum_r) {
 	if (visit[index] == 1)return;
-	
-	if (sum_l == sum_r && sum_l != 0){
-		if (answer < sum_l){
-			printf("sum_l : %d, sum_r : %d, L : %d R : %d\n", sum_l, sum_r);
+
+	if (sum_l == sum_r && sum_l != 0) {
+		if (answer < sum_l) {
+			printf("sum_l : %d, sum_r : %d\n", sum_l, sum_r);
 			answer = sum_l;
 			return;
 		}
 	}
 
 	visit[index] = 1;
-	for (int i = index; i < N; i++){
-			DFS(i+1, sum_l + pillar[i], sum_r);
-			DFS(i + 1, sum_l, sum_r + pillar[i]);
+	for (int i = index; i < N; i++) {
+		DFS(i + 1, sum_l + pillar[i], sum_r);
+		DFS(i + 1, sum_l, sum_r);	// skip 가능한 기둥이 존재 
+		DFS(i + 1, sum_l, sum_r + pillar[i]);
 	}
 	visit[index] = 0;
 }
 
 int main()
 {
-	
+
 	int T;
 	ios::sync_with_stdio(false);
 
 	freopen("pillar_input.txt", "r", stdin);
 	cin >> T;
 
-	for (int tc = 0; tc < T; tc++){
+	for (int tc = 0; tc < T; tc++) {
 		cin >> N;
 		answer = 0;
-		for (int i = 0; i < N; i++){
+		for (int i = 0; i < N; i++) {
 
 			cin >> pillar[i];
 			MAX += pillar[i];
 		}
-		DFS(0,0,0);
+		DFS(0, 0, 0);
 		cout << "#" << tc + 1 << " " << answer << " " << endl;
 	}
 }
