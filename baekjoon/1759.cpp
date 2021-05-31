@@ -3,43 +3,43 @@
 #include <algorithm>
 using namespace std;
 
-char alp[25];
-bool visit[25];
-char save[25];
+char alp[26];
+bool visit[26] = { false, };
+char save[26];
+char aei[5] = { 'a','e','i','o','u' };
 int N, R;
 int number = 0;
 
-void DFS(int cnt) {
-
+void DFS(int idx, int cnt) {
 	if (cnt == R) {
-		//sort(save, save + R);
+		save[cnt] = '\0';
 		for (int i = 0; i < R; i++) {
-			cout << save[i];
-			
+			for (int j = 0; j < 5; j++) {
+				if (save[i] == aei[j]) {
+					cout << save << endl;
+					return;
+				}
+			}
 		}
-		//number++;
-		cout << endl;
 		return;
 	}
 	
-	for (int i = 0; i < N; i++) {
+	for (int i = idx; i < N; i++) {
 		if (visit[i] == true) continue;
 		save[cnt] = alp[i];
 		visit[i] = true;
-		DFS(cnt + 1);
+		DFS(i+1, cnt + 1);
 		visit[i] = false;
 	}
 }
 
 int main() {
-	ios_base::sync_with_stdio(false);
-	cin.tie(0);
-
 	freopen("1759.txt", "r", stdin);
-	memset(visit, false, sizeof(visit));
+	//memset(visit, false, sizeof(visit));
 	cin >> R >> N;
 	for (int i = 0; i < N; i++) {
 		cin >> alp[i];
 	}
-	DFS(0);
+	sort(alp, alp + N);
+	DFS(0,0);
 }
