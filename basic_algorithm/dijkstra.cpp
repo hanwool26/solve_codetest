@@ -23,7 +23,7 @@ int main(){
 	vector<pair<int,int>> graph[30];
 	int i, n, m, a, b, c;
 	cin >> n >> m;
-	vector<int> dist(n+1, int(iae9));
+	vector<int> dist(n+1, int(ie9));
 	for(i=1; i<=m; i++){
 		cin >> a,b,c;
 		graph[a].push_back(make_pair(b,c));
