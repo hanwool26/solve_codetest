@@ -14,7 +14,7 @@ struct Edge{
 		dis = b;
 	}
 	bool operator<(const Edge &b)const{
-		return val > b.dis;	// 최소 heap 
+		return dis > b.dis;	// 최소 heap 
 	}
 };
 
