@@ -4,26 +4,30 @@ using namespace std;
 
 int L, C, R;
 char building[30][30][30];
-bool level_v[30][30][30];
+bool visit[30][30][30];
 int answer = int(1e9);
-
-int dir_x[] = { -1, 1, 0, 0 };
-int dir_y[] = { 0, 0, -1, 1 };
+int dir_z[] = { -1, 1, 0, 0, 0, 0 };
+int dir_x[] = {  0, 0,-1, 1, 0, 0 };
+int dir_y[] = {  0, 0, 0, 0,-1, 1 };
 
 #define x first
 #define y second
 
 typedef struct node{
-	int level;
 	int x;
 	int y;
+	int z;
+	int depth;
+	node(int a, int b, int c, int d){
+		x = a;
+		y = b;
+		z = c;
+		depth = d;
+	}
 }Node;
 
-Node s;
-Node e;
-
 void print_map(){
-	for (int i = 0; i < 1; i++){
+	for (int i = 0; i < L; i++){
 		for (int j = 0; j < R; j++){
 			for (int k = 0; k < C; k++){
 				cout << building[i][j][k];
@@ -34,46 +38,34 @@ void print_map(){
 	}
 }
 
-void dfs(int level, int x, int y, int cnt){
+void BFS(Node s, Node e){
+    queue<Node> q;
+	q.push(s);
+	int xx, yy, zz;
+	int nx, ny, nz;
+	int cur_d;	// depth;
+	visit[s.x][s.y][s.z] = true;
 
-	queue<pair<int, int>> q;
-	bool visit[30][30] = { false, };
-	int depth[30][30];
-	int xx, yy, nx, ny;
-	q.push({ x, y });
-	depth[x][y] = 0;
 	while (!q.empty()){
-		xx = q.front().x;
-		yy = q.front().y;
-		visit[xx][yy] = true;
+		Node n = q.front();
+		xx = n.x;
+		yy = n.y;
+		zz = n.z;
+		cur_d = n.depth;
 		q.pop();
-		if (e.level == level && e.x == xx && e.y == yy){
-			if (answer > cnt) answer = cnt;
-			return;
+		
+		if (building[xx][yy][zz] == 'E'){
+			answer = cur_d;
 		}
-		if (building[level + 1][xx][yy] == '.' || building[level + 1][xx][yy] == 'E'){
-			if (level_v[level + 1][xx][yy] != true){
-				level_v[level + 1][xx][yy] = true;
-				dfs(level + 1, xx, yy, depth[xx][yy] + cnt + 1);
-				level_v[level + 1][xx][yy] = false;
-			}
-		}
-		else if (building[level - 1][xx][yy] == '.' || building[level - 1][xx][yy] == 'E'){
-			if (level_v[level - 1][xx][yy] != true){
-				level_v[level - 1][xx][yy] = true;
-				dfs(level - 1, xx, yy, depth[xx][yy] + cnt + 1);
-				level_v[level - 1][xx][yy] = false;
-			}
-		}
-		for (int i = 0; i < 4; i++){
+		for (int i = 0; i < 6; i++){
 			nx = xx + dir_x[i];
 			ny = yy + dir_y[i];
-			if (nx < 0 || nx > R - 1 || ny <0 || ny > C - 1 || visit[nx][ny] || \
-				building[level][nx][ny] == '#') continue;
-			depth[nx][ny] = depth[xx][yy] + 1;
-
-			q.push({ nx, ny });
-		}
+			nz = zz + dir_z[i]; 
+			if (nx < 0 || nx > L - 1 || ny < 0 || ny > R - 1 || nz < 0 || nz > C - 1 \
+				|| visit[nx][ny][nz] || building[nx][ny][nz] == '#') continue;
+			q.push(Node(nx, ny, nz, cur_d + 1));
+			visit[nx][ny][nz] = true;
+		}		
 	}
 }
 
@@ -81,31 +73,29 @@ int main(){
 	ios_base::sync_with_stdio(false);
 	cin.tie(0);
 
-	freopen("6593.txt", "r", stdin);
+	//freopen("6593.txt", "r", stdin);
 	while (true){
 		cin >> L >> R >> C;
 		if (L == 0 && R == 0 && C == 0) break;
 		answer = int(1e9);
-
+		Node start(0,0,0,0);
+		Node end(0,0,0,0);
 		for (int i = 0; i < L; i++){
 			for (int j = 0; j < R; j++){
 				for (int k = 0; k < C; k++){
 					cin >> building[i][j][k];
+                    visit[i][j][k] = false;
 					if (building[i][j][k] == 'S'){
-						s.level = i;
-						s.x = j;
-						s.y = k;
-					}
-					else if (building[i][j][k] == 'E'){
-						e.level = i;
-						e.x = j;
-						e.y = k;
+						start.x = i;
+						start.y = j;
+						start.z = k;
+						start.depth = 0;
 					}
 				}
 			}
 		}
-
-		dfs(s.level, s.x, s.y, 0);
+		//print_map();
+		BFS(start, end);
 		if (answer != int(1e9)){
 			printf("Escaped in %d minute(s).\n", answer);
 		}
