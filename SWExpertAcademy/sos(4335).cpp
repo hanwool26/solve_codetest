@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-int num_block;
+int num_blocks;
 int blocks[20][3];
 int dp[20][(1 << 20) - 1][3];
 
@@ -13,7 +13,7 @@ int cal(int b, int use, int direc, int w, int d)
 		return height;
 	}
 	int result = 0;
-	for (int i = 0; i < num_block; i++) {
+	for (int i = 0; i < num_blocks; i++) {
 		if ((use & (1 << i)) != 0) {
 			continue;
 		}
@@ -30,16 +30,14 @@ int cal(int b, int use, int direc, int w, int d)
 			}
 		}
 		if ((w >= blocks[i][1] && d >= blocks[i][0]) || (w >= blocks[i][0] && d >= blocks[i][1])) {
-			result = blocks[i][0] + cal(i, use | (1 << i), 1, blocks[i][1], blocks[i][0]);
+			result = blocks[i][2] + cal(i, use | (1 << i), 2, blocks[i][1], blocks[i][0]);
 			if (height < result) {
 				height = result;
 			}
 		}
 	}
-	if (result == 0) {
-		height = 0;
-	}
-	return height;
+    if (result  == 0) height = 0;
+    return height;
 }
 int main() {
 	int T;
@@ -50,10 +48,10 @@ int main() {
 	for (int tc = 0; tc < T; tc++) {
 		cin >> num_blocks;
 		for (int i = 0; i < num_blocks; i++) {
-			for (int k = 0; k < (1 << num_blocks); k++) {
-				dp[j][k][0] = dp[j][k][1] = dp[j][k][2] = -1;
+			for (int k = 0; k < (1 << num_blocks)-1; k++) {
+				dp[i][k][0] = dp[i][k][1] = dp[i][k][2] = -1;
 			}
-			cin >> blocks[j][0] >> blocks[j][1] >> blocks[j][2];
+			cin >> blocks[i][0] >> blocks[i][1] >> blocks[i][2];
 		}
 		cout << "#" << tc + 1 << " " << cal(0, 0, 0, 10001, 10001) << endl;
 	}
