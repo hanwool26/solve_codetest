@@ -62,7 +62,6 @@ int main(){
 			cin >> b[i].height >> b[i].width;
 			b[i].weight = b[i].height * b[i].width;
 		}
-		max_value = max(max_height, max_width);
 		DFS(0, 0, 0, 0);
 		cout << "#" << tc + 1 << " " << answer << endl;
 	}
