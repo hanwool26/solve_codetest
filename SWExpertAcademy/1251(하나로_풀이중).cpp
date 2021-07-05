@@ -12,7 +12,7 @@ typedef struct pos {
 typedef struct edge {
 	int adj;
 	long long fee;
-	edge(int a, int b) {
+	edge(int a, long long b) {
 		adj = a;
 		fee = b;
 	}
@@ -68,7 +68,7 @@ int main() {
 	for (int tc = 1; tc <= T; tc++) {
 		
 		memset(visit, false, sizeof(visit));
-		for (int i = 0; i <= 1000; i++) {
+		for (int i = 0; i < 1000; i++) {
 			v[i].clear();
 		}
 		cin >> N;
@@ -83,8 +83,8 @@ int main() {
 		for (int i = 1; i <= N; i++) {
 			for (int j = 1; j <= N; j++) {
 				if (i == j) continue;
-				if(p[i].x == p[j].x) v[i].push_back(Edge(j, E * (long long)((long long)pow(abs(p[i].y - p[j].y), 2))));
-				else if (p[i].y == p[j].y) v[i].push_back(Edge(j, E * (long long)((long long)pow(abs(p[i].x - p[j].x), 2))));
+				if(p[i].x == p[j].x) v[i].push_back(Edge(j, E * (long long)(pow(abs(p[i].y - p[j].y), 2))));
+				else if (p[i].y == p[j].y) v[i].push_back(Edge(j, E * (long long)(pow(abs(p[i].x - p[j].x), 2))));
 				else v[i].push_back(Edge(j, E * (long long)((long long)pow(abs(p[i].x - p[j].x), 2) + (long long)pow(abs(p[i].y - p[j].y), 2))));
 			}
 		}
