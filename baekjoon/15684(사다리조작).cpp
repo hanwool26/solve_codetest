@@ -1,117 +1,58 @@
 #include <iostream>
-#include <queue>
-#include <vector>
-#include <time.h>
-
+#include <algorithm>
 using namespace std;
-int N, M;
-vector<pair<int, int>> v;
-int map[9][9];
-bool visit[9][9];
-int dir_x[] = { -1, 1, 0, 0 };
-int dir_y[] = { 0, 0, -1, 1 };
 
-void print_map(int(*map_c)[9]) {
-	for (int i = 1; i <= N; i++) {
-		for (int j = 1; j <= M; j++) {
-			cout << map_c[i][j] << " ";
+int N, M, H;	// 세로, 가로선, 가로
+
+bool visit[31][11];
+int answer = int(1e9);
+
+bool check(){	
+	//cout << "check" << endl;
+	for (int i = 1; i <= N; i++){
+		int cur = i;
+		for (int j = 1; j <= H; j++){
+			if (visit[j][cur] == true) cur = cur + 1;
+			else if (visit[j][cur - 1] == true) cur = cur - 1;
 		}
-		cout << endl;
+		if (cur != i) return false;
 	}
-	cout << "=======================" << endl;
+	return true;
 }
 
-void copy_map(int(*dest)[9], int(*source)[9]) {
-	for (int i = 1; i <= N; i++) {
-		for (int j = 1; j <= M; j++) {
-			dest[i][j] = source[i][j];
-		}
-	}
-}
-
-int temp[9][9];
-int answer = 0;
-
-void BFS(int x, int y, int(*temp_map)[9]) {
-	queue<pair<int, int>> q;
-	q.push({ x, y });
-	int xx, yy, nx, ny;
-
-	while (!q.empty()) {
-		xx = q.front().first;
-		yy = q.front().second;
-		q.pop();
-
-		for (int i = 0; i < 4; i++) {
-			nx = xx + dir_x[i];
-			ny = yy + dir_y[i];
-			if (nx < 1 || nx > N || ny < 1 || ny > M || \
-				temp_map[nx][ny] > 0) continue;
-			
-			if (temp_map[nx][ny] != 2) {
-				temp_map[nx][ny] = 2;
-				q.push({ nx, ny });
-			}				
-		}
-	}
-}
-
-int count_map(int(*temp)[9]) {
-	int cnt = 0;
-	for (int i = 1; i <= N; i++) {
-		for (int j = 1; j <= M; j++) {
-			if (temp[i][j] == 0) {
-				cnt++;
-			}
-		}
-	}
-	return cnt;
-}
-
-void DFS(int x, int cnt) {
-	if (cnt > 3) return;
-	if (cnt == 3) {		
-		copy_map(temp, map);
-		int count = 0;
-		for (int i = 0; i < v.size(); i++) {
-			BFS(v[i].first, v[i].second, temp);
-		}
-		count = count_map(temp);
-		if (answer < count) {
-			answer = count;
-		}
+void DFS(int idx, int cnt){
+	if (cnt >= 4) return;
+	if (check()==true){
+		//cout << "check" << endl;
+		answer = min(answer, cnt);
 		return;
 	}
-	for (int i = x; i <= N; i++) {
-		for (int j = 1; j < M; j++) {
-			if (map[i][j] >= 1) continue;
-				map[i][j] = 1;
-				DFS(i, cnt + 1);
-				map[i][j] = 0;			
+
+	for (int i = idx; i <= H; i++){
+		for (int j = 1; j <= N; j++){
+			if (visit[i][j] == true) continue;
+			if (visit[i][j - 1] == true) continue;
+			if (visit[i][j + 1] == true) continue;
+			visit[i][j] = true;
+			DFS(i, cnt + 1);
+			visit[i][j] = false;
 		}
-	}
+	}	
 }
 
-int main() {
+int main(){
 	ios_base::sync_with_stdio(false);
 	cin.tie(0);
 
-	clock_t start, end;
+	int a, b;
+	//freopen("15684.txt", "r", stdin);
+	cin >> N >> M >> H;
 
-	start = clock();
-	freopen("14502.txt", "r", stdin);
-	cin >> N >> M;
-
-	for (int i = 1; i <= N; i++) {
-		for (int j = 1; j <= M; j++) {
-			cin >> map[i][j];
-			if (map[i][j] == 2) {
-				v.push_back({ i, j });
-			}
-		}
+	for (int i = 0; i < M; i++){
+		cin >> a >> b;
+		visit[a][b] = true;
 	}
+
 	DFS(1, 0);
-	cout << answer << endl;
-	end = clock();
-	cout << "duration : " << (double)(end - start) / CLOCKS_PER_SEC << endl;
+	cout << ((answer!=int(1e9))?answer:-1) << endl;
 }
