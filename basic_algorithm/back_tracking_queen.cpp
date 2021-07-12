@@ -23,7 +23,7 @@ void queens(int level) {
 	}
 	
 	for(int col=1; col<=N; ++col) {
-		cols[level+1] = col;
+		cols[level] = col;
 		queens(level+1);
 	}
 }
