@@ -25,6 +25,7 @@ void DFS(int idx, int use, int distance, int cnt) {
 
 	visit[idx] = true;
 	for (int i = 1; i <= N + 1; i++) {
+		if (use & (1<<i) continue;
 		DFS(i, use | (1<<i), distance + (abs(v[idx].first - v[i].first) + abs(v[idx].second - v[i].second)), cnt+1);
 	}
 	visit[idx] = false;
