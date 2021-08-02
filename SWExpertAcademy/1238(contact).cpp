@@ -40,7 +40,6 @@ void BFS(int start) {
 			if (visit[next_adj] == true) continue;
 			q.push(Node(next_adj, time + 1));
 			visit[next_adj] = true;
-
 		}
 	}
 }
