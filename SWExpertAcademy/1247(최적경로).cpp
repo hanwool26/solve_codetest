@@ -7,13 +7,10 @@ using namespace std;
 
 int N;
 vector <pair<int, int>> v;
-bool visit[12];
 int dp[12][(1<<12)-1];
 int answer;
 
 void DFS(int idx, int use, int distance, int cnt) {
-	if (visit[idx]) return;
-
 	if (cnt == N + 1 && idx == 1) {
 		if (answer > distance) {
 			answer = distance;
@@ -22,13 +19,11 @@ void DFS(int idx, int use, int distance, int cnt) {
 	}	
 	if (dp[idx][use] < distance) return;
 	else dp[idx][use] = distance;
-
-	visit[idx] = true;
+	
 	for (int i = 1; i <= N + 1; i++) {
 		if (use & (1<<i) continue;
 		DFS(i, use | (1<<i), distance + (abs(v[idx].first - v[i].first) + abs(v[idx].second - v[i].second)), cnt+1);
 	}
-	visit[idx] = false;
 }
 
 
@@ -41,7 +36,6 @@ int main() {
 	//freopen("1247.txt", "r", stdin);
 	cin >> T;
 	for (int tc = 1; tc <= T; tc++) {
-		memset(visit, false, sizeof(visit));
 		for (int i = 0; i < 12; i++) {
 			for (int j = 0; j < (1 << 12)-1; j++) {
 				dp[i][j] = (int)1e9;
