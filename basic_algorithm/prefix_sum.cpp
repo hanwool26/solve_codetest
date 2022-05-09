@@ -1,3 +1,4 @@
+// https://gamedevlog.tistory.com/68
 #include <iostream>
 #include <vector>
 
