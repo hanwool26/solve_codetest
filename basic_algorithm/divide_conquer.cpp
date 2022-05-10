@@ -6,28 +6,42 @@ using namespace std;
 
 vector<int> v;
 
-int BinarySearch(int target){
+int BinarySearch(int target) {
     int low = 0;
     int high = v.size();
     int middle;
 
-    while(low <= high){
+    while (low <= high) {
         middle = (low + high) / 2;
-        if (target == v[middle]){
+        if (target == v[middle]) {
             return middle;
-        }else if (target > v[middle]){
+        }
+        else if (target > v[middle]) {
             low = middle + 1;
-        }else {
+        }
+        else {
             high = middle - 1;
         }
     }
     return -1;
 }
 
-int main(){
-    for(int i = 0; i< 10; i++){
+int Recur_BinarySearch(int target, int low, int high) {
+    int middle = (low + high) / 2;
+    //cout << middle << " " << v[middle] << endl;
+    if (target == v[middle]) return middle;
+    if (target > v[middle]) {
+        return recur_binary_search(target, middle + 1, high);
+    }
+    else if (target < v[middle]) {
+        return recur_binary_search(target, low, middle-1);
+    }
+}
+
+int main() {
+    for (int i = 0; i <= 9; i++) {
         v.push_back(i);
     }
-    cout << BinarySearch(4) << endl;
+    cout << recur_binary_search(9, 0, v.size()) << endl;
     return 0;
 }
