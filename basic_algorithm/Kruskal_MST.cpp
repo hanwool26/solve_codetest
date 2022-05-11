@@ -1,18 +1,24 @@
 // https://swblossom.tistory.com/51
 /*
-7
-1 2 4
-1 3 2
-2 4 4
-2 5 5
-3 5 4
-4 6 1
-5 6 2
+10
+1 7 12
+4 7 20
+2 4 21
+1 4 23
+1 2 26
+3 5 29
+5 6 30
+2 3 36
+3 6 37
+2 5 45
+3 7 55
+
 */
 
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <time.h>
 
 using namespace std;
 
@@ -44,7 +50,7 @@ void init() {
 int Find(int x) {
 	if (parent[x] == x) return x;
 	else {
-		return parent[x] = Find(parent[x]);
+		return Find(parent[x]);
 	}
 }
 
@@ -57,6 +63,8 @@ void Union(int a, int b) {
 }
 
 int main() {
+	clock_t start, finish;
+	start = clock();
 	ios::sync_with_stdio(false);
 	cin.tie(0);
 
@@ -81,6 +89,8 @@ int main() {
 			parent[ed_s] = ed_e;
 		}
 	}
-	cout << res << endl;
+	cout << res << endl; // answer is 148
+	finish = clock();
+	cout << (double)(finish - start) / CLOCKS_PER_SEC << endl;
 	return 0;
 }
