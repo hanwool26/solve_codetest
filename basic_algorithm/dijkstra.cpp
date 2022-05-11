@@ -1,4 +1,14 @@
-include <iostream>
+/*   
+7
+1 2 4
+1 3 2
+2 4 4
+2 5 5
+3 5 4
+4 6 1
+5 6 2
+*/
+#include <iostream>
 #include <vector>
 #include <queue>
 
