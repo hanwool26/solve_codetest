@@ -1,49 +1,64 @@
-#include <iostream>
-#include <algorithm>
-#include <queue>
+include <iostream>
 #include <vector>
+#include <queue>
 
 using namespace std;
-int unf[1001];
 
-struct Edge{
-	int vex;
-	int dis;
-	Edge(int a, int b){
-		vex = a;
-		dis = b;
-	}
-	bool operator<(const Edge &b)const{
-		return dis > b.dis;	// 최소 heap 
-	}
-};
+typedef struct edge {
+    int v;
+    int d;
+    edge(int a, int b) {
+        this->v = a;
+        this->d = b;
+    }
+     bool operator<(const edge &b) const{
+        return this->d > b.d;	// min heap
+     }
+}Edge;
 
-int main(){
-	priorty_queue<Edge> Q;
-	vector<pair<int,int>> graph[30];
-	int i, n, m, a, b, c;
-	cin >> n >> m;
-	vector<int> dist(n+1, int(ie9));
-	for(i=1; i<=m; i++){
-		cin >> a,b,c;
-		graph[a].push_back(make_pair(b,c));
-	}
-	Q.push(Edge(1,0);
-	dist[1] = 0;
-	while(!Q.empty()){
-		int now=Q.top().vex; // min heap (간선 최소값이 return) 
-		int cost=Q.top().dis;
-		Q.pop();
-		if(cost>dist[now]) continue;
-		for(i=0; i<graph[now].size(); i++){
-			int next=graph[now][i].first;
-			int nextDis = cost + graph[now][i].second;
-			if(dist[next]>nextDis){
-				dist[next]=nextDis;
-				Q.push(Edge(next, nextDis));
-			}
-		}
-	}
-	// dist 값을 0에서의 모든 정점으로의 최소 거리 저장. 
+vector<pair<int, int>> v[10];
+vector<int> dist(10, 1e9);
+int n;
+
+void dijstra() {
+    priority_queue<Edge> pq;
+    pq.push(Edge(1, 0));
+    dist[1] = 0;
+
+    while (!pq.empty()) {
+        int s = pq.top().v;
+        int d = pq.top().d;
+        pq.pop();
+        if (d > dist[s]) continue;	// to reduce the excute time. 
+        for (int i = 0; i < v[s].size(); i++) {
+            int next = v[s][i].first;
+            int next_dis = d + v[s][i].second;
+            if (dist[next] > next_dis) {
+                dist[next] = next_dis;
+                pq.push(Edge(next, next_dis));
+            }            
+        }
+    }
 }
-		
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    //freopen("다익스트라.txt", "r", stdin);
+    cin >> n;
+
+    int a, b, c;
+    for (int i = 0; i < n; i++) {
+        dist[i] = 1e9;
+    }
+
+    for (int i = 0; i < n; i++) {
+        cin >> a >> b >> c;
+        v[a].push_back({ b,c });
+        v[b].push_back({ a,c }); // directed graph 이므로 양 정점을 graph에 입력
+    }
+    dijstra();
+
+    cout << dist[4] << endl;
+    return 0;
+}
