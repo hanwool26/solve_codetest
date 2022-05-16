@@ -1,76 +1,93 @@
 #include <iostream>
- 
+#include <vector>
+
 using namespace std;
- 
-int cpu_endtime[5];
-int packet[1000][2];
-int answer;
+#define s_time first
+#define p_length second
+
 int N;
+int answer;
+int cpu_n;
 int tc;
- 
-unsigned char dp[1001][11][11][11][11][11];
- 
-bool solution(int idx, int num_cpu)
-{
-    if (idx == N) {
-        return true;
-    }
- 
-    int wq[5] = { 0, }; 
-    int start_time = packet[idx][0];
-    int handler_time = packet[idx][1];
- 
-    for (int i = 0; i < num_cpu; i++) {
-        if (cpu_endtime[i] < start_time)
-            wq[i] = 0;
-        else
-            wq[i] = cpu_endtime[i] - start_time;
-    }
- 
-    if (dp[idx][wq[0]][wq[1]][wq[2]][wq[3]][wq[4]] == tc*5 + num_cpu) return false;
-    dp[idx][wq[0]][wq[1]][wq[2]][wq[3]][wq[4]] = tc*5 + num_cpu;
- 
-    for (int i = 0; i < num_cpu; i++) {
-        int end_time = cpu_endtime[i];
-        if (cpu_endtime[i] - start_time + handler_time > 10) continue;
-        if (wq[i] == 0)
-            cpu_endtime[i] = start_time + handler_time;
-        else
-            cpu_endtime[i] = cpu_endtime[i] + handler_time;
-        if (solution(idx + 1, num_cpu)) {
-            cpu_endtime[i] = end_time;
-            return true;
-        }
-        cpu_endtime[i] = end_time;
-    }
-    return false;
+
+vector<pair<int, int>> data;
+int cpu_start_time[5];
+int dp[1001][11][11][11][11][11];
+
+void init_test(){
+	for (int i = 0; i < 5; i++){
+		cpu_start_time[i] = 0;
+	}
+	answer = 0;
 }
- 
-int main()
-{
-    int T;
-    ios::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
- 
-    freopen("packet_handler_input.txt", "r", stdin);
-    cin >> T;
- 
-    for (tc = 0; tc < T; tc++) {
-        answer = -1;
-        int time, length;
-        cin >> N;
-        for (int i = 0; i < N; i++) {
-            cin >> time >> length;
-            packet[i][0] = time;
-            packet[i][1] = length;
-        }
-        for (int cpu = 1; cpu <= 5; cpu++) {
-            if (solution(0, cpu)) {
-                answer = cpu;
-                break;
-            }
-        }
-        cout << "#" << tc + 1 << " " << answer << endl;
-    }
-    return 0;
+
+void dfs(int idx){
+	if (idx == N){
+		answer = cpu_n;
+		return;
+	}
+
+	pair<int, int> packet = data[idx];
+	int previous_start_time, cpu_end_time;
+	int wait_time; int total_time;
+
+	/*-------------------------------------------
+	                   가지치기
+	--------------------------------------------*/
+	int wq[5] = { 0, };
+	for (int i = 0; i < cpu_n; i++){
+		if (cpu_start_time[i] <= packet.s_time)
+			wq[i] = 0;
+		else
+			wq[i] = cpu_start_time[i] - packet.s_time;		
+	}
+
+	if (dp[idx][wq[0]][wq[1]][wq[2]][wq[3]][wq[4]] == tc*5 + cpu_n) return;
+	dp[idx][wq[0]][wq[1]][wq[2]][wq[3]][wq[4]] = tc*5 + cpu_n;
+	/*-------------------------------------------
+	--------------------------------------------*/
+
+	for (int i = 0; i < cpu_n; i++){
+		cpu_end_time = previous_start_time = cpu_start_time[i];
+		if (cpu_end_time <= packet.s_time){
+			cpu_end_time = packet.s_time + packet.p_length;
+			wait_time = 0;
+		}
+		else{
+			cpu_end_time = cpu_end_time + packet.p_length;
+			wait_time = previous_start_time - packet.s_time;
+		}
+		total_time = wait_time + packet.p_length;
+		if (total_time > 10) continue;
+		cpu_start_time[i] = cpu_end_time;
+		dfs(idx + 1);
+		cpu_start_time[i] = previous_start_time;		
+	}
+}
+
+int main(){
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+
+	freopen("packet_handler.txt", "r", stdin);
+	int T; cin >> T;
+
+	for (tc = 1; tc <= T; tc++){
+		cin >> N;
+		int time, length;
+		data.clear();
+		for (int i = 0; i < N; i++){
+			cin >> time >> length;
+			data.push_back(make_pair(time, length));
+		}
+		for (cpu_n = 1; cpu_n <= 5; cpu_n++){
+			init_test();
+			dfs(0);
+			if (answer > 0){
+				break;
+			}
+		}
+		cout << "#" << tc << " " << (answer == 0 ? -1 : answer)  << endl;
+	}
+	return 0;
 }
