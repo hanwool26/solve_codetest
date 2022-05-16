@@ -24,23 +24,58 @@ int main() {
 			}
 		}
 	}
-	/* BOJ 2565
-	for (int i = 0; i < 8; i++) {
-		cout << dp[i] << " ";
-	}
-	cout << endl;
+	return 0;
+}
 
+/*-------------------------------
+    BOJ 2625
+-------------------------------*/
+#include <iostream>
+#include <vector>
+#include <algorithm>
 
-	freopen("lis.txt", "r", stdin);
-	int a, b, N;
-	cin >> N;
-	int max_n = 0;
+using namespace std;
+
+#define MAX 100
+typedef struct line {
+	int left;
+	int right;
 	
-	memset(arr, 0, sizeof(0));
+	line(int left, int right) {
+		this->left = left;
+		this->right = right;
+	}
+
+	bool operator<(const line& l)const {
+		return this->left < l.left;
+	}
+}Line;
+
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+
+	//freopen("lis.txt", "r", stdin);
+	int a, b, N;
+	int ans = 0;
+	cin >> N;
+	vector<Line> v;
+	vector<int> dp(N, 1);
 	for (int i = 0; i < N; i++) {
 		cin >> a >> b;
-		arr[a] = b;
-		max_n = max(max_n, max(a, b));
-	}*/
+		v.push_back(Line(a, b));
+	}
+
+	sort(v.begin(), v.end());
+
+	for (int k = 0; k < v.size(); k++) {
+		for (int i = 0; i < k; i++) {			
+			if (v[i].right < v[k].right) {
+				dp[k] = max(dp[k], dp[i] + 1);
+			}			
+		}
+		ans = max(ans, dp[k]);
+	}
+	cout << N-ans << endl;
 	return 0;
 }
