@@ -11,14 +11,16 @@ int origin[1000];
 
 void init_test() {
 	answer = 21;
-	memset(dp, 0, sizeof(dp));
-	memset(op, false, sizeof(op));
-	memset(origin, 0, sizeof(origin));
+	for (int i = 0; i < 1000; i++) {
+		origin[i] = dp[i] = 0;
+	}
+	for (int i = 0; i < 5; i++) {
+		op[i] = false;
+	}
 }
 
 void dfs(int number, int touch, int flag) {
-
-	if (touch + flag> M || touch+flag > answer) {
+	if (touch + flag > M || touch + flag > answer) {
 		return;
 	}
 	if (number == W) {
@@ -27,21 +29,21 @@ void dfs(int number, int touch, int flag) {
 	}
 
 	for (int i = 0; i < 1000; i++) {
-		if (!dp[i] || !origin[i]) continue;
-
-		for (int j = 1; j < 5; j++) {
-			if (op[j] == true) {
-				if (i == 0 && j == 4) continue;
-				int temp;
-				if (j == 1) temp = number + i;
-				else if (j == 2) temp = number - i;
-				else if (j == 3) temp = number * i;
-				else if (j == 4 && i != 0) temp = number / i;
-				if (temp < 0 || temp > 999) continue;
-				if (dp[temp] ==0 || dp[temp] > touch + dp[i] + 1){
-					dp[temp] = touch + dp[i] + 1;
-					dfs(temp, dp[temp], 1);
-				}				
+		if (origin[i] != 0) {
+			for (int j = 1; j < 5; j++) {
+				if (op[j] == true) {
+					if (i == 0 && j == 4) continue;
+					int temp;
+					if (j == 1) temp = number + i;
+					else if (j == 2) temp = number - i;
+					else if (j == 3) temp = number * i;
+					else if (j == 4) temp = number / i;
+					if (temp < 0 || temp > 999) continue;
+					if (dp[temp] == 0 || dp[temp] > touch + dp[i] + 1) {
+						dp[temp] = touch + dp[i] + 1;
+						dfs(temp, dp[temp], 1);
+					}
+				}
 			}
 		}
 	}
@@ -59,8 +61,6 @@ void init_dp(int number, int digit) {
 	if (dp[number] == 0) origin[number] = dp[number] = digit;
 	else if (dp[number] > digit) origin[number] = dp[number] = digit;
 
-
-
 	for (int i = 0; i < N; i++) {
 		init_dp(number * 10 + num[i], digit + 1);
 	}
@@ -69,8 +69,7 @@ void init_dp(int number, int digit) {
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(0);
-
-	freopen("old_phone.txt", "r", stdin);
+	//freopen("old_phone.txt", "r", stdin);
 	int T;
 	int op_idx;
 	cin >> T;
@@ -93,12 +92,11 @@ int main() {
 		}
 		else {
 			for (int i = 0; i < 1000; i++) {
-				if (dp[i] && origin[i])
-					dfs(i, dp[i], 0);
+				if (origin[i])
+					dfs(i, origin[i], 0);
 			}
-		}	
-
-		cout << "#" << tc << " " << (answer==21 ? -1 : answer) << endl;
+		}
+		cout << "#" << tc << " " << (answer == 21 ? -1 : answer) << endl;
 	}
 	return 0;
 }
