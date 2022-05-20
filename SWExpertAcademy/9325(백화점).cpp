@@ -3,14 +3,15 @@
 using namespace std;
 #define ll long long
 ll answer;
-int N, P, D;
-#define MAX_N (unsigned int)(2*1e6+1)
+ll N, P, D;
+#define MAX_N (unsigned int)(2*1e6+2)
 
 ll product[MAX_N];
 ll pre_sum[MAX_N];
 ll coupon[MAX_N];
+ll c_tree[4*MAX_N];
 
-int get_discount(ll  s, ll e) {
+ll get_discount(ll  s, ll e) {
     ll discount = 0;
     if ((e - s) >= D) {
         for (int i = s + D - 1; i <= e; i++) {
@@ -18,6 +19,26 @@ int get_discount(ll  s, ll e) {
         }
     }
     return discount;
+}
+
+ll make_node(ll n, ll s, ll e) {
+    if (s == e) {
+        return c_tree[n] = coupon[s];
+    }
+    else {
+        return c_tree[n] = max(make_node(n * 2, s, (s + e)/ 2), make_node((n * 2)+1, ((s + e) / 2) + 1, e));
+    }
+}
+
+ll get_discount_node(ll n, ll l, ll r, ll s, ll e) { // ( 1, 1, N, s+D, e)
+    //cout << n << endl;
+    if (r < s || l > e) return 0;
+    if (l>=s && r<=e) {
+        return c_tree[n];
+    }
+    else {
+        return max(get_discount_node(n * 2, l, (l+r)/2 , s, e), get_discount_node((n * 2) + 1, (l+r)/2+1, r, s, e));
+    }
 }
 
 void solution() {
@@ -31,13 +52,15 @@ void solution() {
         if (i >= D)  coupon[i] = product[i] + coupon[i - 1] - product[i - D];
         else coupon[i] = product[i] + coupon[i - 1];
     }
+    make_node(1, 1, N);
 
     // two pointer 활용 
     ll s = 0, e = D;
-    ll value;
+    ll value, discount=0;
     while (e <= N) {
         value = pre_sum[e] - pre_sum[s];
-        value = value - get_discount(s, e);
+        discount = get_discount_node(1, 1, N, s, e);
+        value -= discount;
 
         if (value <= P) {
             answer = max(answer, (e - s) );
@@ -60,9 +83,8 @@ int main() {
         answer = 0;
         for (int i = 1; i <= N; i++) {
             cin >> product[i];
-        }
+        }        
         solution();
-
         cout << "#" << tc << " " << answer << endl;
     }
 }
