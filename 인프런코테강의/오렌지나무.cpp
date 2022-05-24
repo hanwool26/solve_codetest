@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 int W, H, T, S;
@@ -18,20 +19,23 @@ int main() {
 	int max_v = 0;
 	for (int i = 0; i < T; i++) {
 		cin >> x >> y;
-		v.push_back({ x,y });
+		v.push_back({ x, y });
 	}
 
-	for (int i = 0; i < T; i++) {
-		cnt = 0;
-		for (int j = 0; j < T; j++) {
-			if ((v[i].x >= v[j].x && v[i].x - v[j].x <= S) &&
-				(v[i].y >= v[j].y && v[i].y - v[j].y <= S)) {
-				cnt++;
+	for (int i = 0; i < T; i++){		
+		int x = v[i].x;
+		for (int j = 0; j < T; j++){
+			int y = v[j].y;
+			cnt = 0;
+			for (int k = 0; k < T; k++){
+				if ((x >= v[k].x && x - v[k].x <=S) &&
+					(y >= v[k].y && y - v[k].y <= S)){
+					cnt++;
+				}
 			}
-		}
-		max_v = max(max_v, cnt);
+			max_v = max(cnt, max_v);
+		}		
 	}
 	cout << max_v;
-		
 	return 0;
 }
