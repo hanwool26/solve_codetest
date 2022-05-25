@@ -15,13 +15,12 @@ typedef struct study {
 		this->effect = effect;
 	}
 	bool operator<(const study& b)const {
-		return this->start < b.start;
+		return this->finish < b.finish; // j--할 때 마지막 finish를 기점으로 index를 구하므로 finish로 sorting 해야함. 
 	}
 }Study;
 
 int dp[1000];
 int main() {
-
 	freopen("효율적인공부.txt", "r", stdin);
 	vector<Study> v;
 	stack<int> stack;
@@ -32,11 +31,8 @@ int main() {
 		v.push_back(Study(s, f, e));		
 	}
 	int answer = 0;
-	sort(v.begin(), v.end());
-
-	
+	sort(v.begin(), v.end());	
 	dp[0] = v[0].effect;
-
 	for (int i = 1; i < M; i++) {
 		int k = 0;
 		int idx = -1;
@@ -50,14 +46,8 @@ int main() {
 			dp[i] = max(dp[idx] + v[i].effect, dp[i - 1]);
 		else
 			dp[i] = max(v[i].effect, dp[i - 1]);
-
 		answer = max(answer, dp[i]);
 	}
-	
-	for (int i = 0; i < M; i++) {
-		cout << dp[i] << " ";
-	}
-	
 	cout << answer << endl;
 	return 0;
 }
