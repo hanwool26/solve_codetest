@@ -29,7 +29,7 @@ N <= 64, H <= 255
 using namespace std;
 
 int N;
-int map[65][65];
+int g_map[65][65];
 int c_map[65][65];
 bool visit[65][65];
 set<pair<int, int>> parent[65][65];
@@ -105,14 +105,18 @@ void bfs(int (*map)[65], int base, int cx, int cy) {
 	int min_h = 256;
 	pair<int, int> parent_pos;
 
+	bool l_visit[65][65];
+	memcpy(l_visit, visit, sizeof(visit));
+
+	q.push({ cx,cy });
 	if (parent[cx][cy].size() > 0) {
 		for (auto& i : parent[cx][cy]) {
 			q.push({ i.x, i.y });
 			s.push({ i.x, i.y });
 		}
 	}
-	q.push({ cx,cy });
-	visit[cx][cy] = true;
+	
+	l_visit[cx][cy] = true;
 
 	while (!q.empty()) {
 		cx = q.front().x;
@@ -123,29 +127,29 @@ void bfs(int (*map)[65], int base, int cx, int cy) {
 		for (int i = 0; i < 4; i++) {
 			nx = cx + dir_x[i];
 			ny = cy + dir_y[i];
-			
-			if (nx < 0 || nx > N - 1 || ny < 0 || ny > N - 1 || visit[nx][ny]) continue;
 			if (map[nx][ny] > base) {
-				//min_h = min(min_h, map[nx][ny]); // 물이 차오를 수 있는 높이값 저장하고 경로 탐색 안함. 
+				//min_h = min(min_h, map[nx][ny]); // 물이 차오를 수 있는 높이
 				if (min_h > map[nx][ny]) {
 					min_h = map[nx][ny];
 					parent_pos = { nx,ny };
 				}
 				continue;
-			}
+			}			
+			if (nx < 0 || nx > N - 1 || ny < 0 || ny > N - 1 || l_visit[nx][ny]) continue;
 			if ((nx == 0 || nx == N - 1 || ny == 0 || ny == N - 1) &&
-				map[nx][ny] <= base) return; // 가장자리에 있는 곳으로 물이 새어나가므로 빗물이 고일수없는 위치라 판단. 
+				map[nx][ny] <= base) return; // 빗물이 고일 수 없으므로
 			q.push({ nx,ny });
-			visit[nx][ny] = true;
+			l_visit[nx][ny] = true;
 		}
 	}
 
-	if (s.size() == 1) return; // 갈곳이 없었다면 return
+	if (s.size() == 1 || min_h == 256) return; // 갈곳이 없었다면 return 혹은 벽을 못만났다면
 	
 	while (!s.empty()) {
 		cx = s.top().x;
 		cy = s.top().y;
 		map[cx][cy] = min_h;
+		visit[cx][cy] = true;
 		parent[parent_pos.x][parent_pos.y].insert({ cx, cy });
 		s.pop();
 	}
@@ -153,12 +157,13 @@ void bfs(int (*map)[65], int base, int cx, int cy) {
 }
 
 void bfs_main() {
-	memcpy(c_map, map, sizeof(map));
+	memcpy(c_map, g_map, sizeof(g_map));
 	memset(visit, false, sizeof(visit));
 	for (int i = 1; i < N-1; i++) {
 		for (int j = 1; j < N-1; j++) {
-			int base = map[i][j];
-			bfs(c_map, base, i, j);
+			int base = g_map[i][j];
+			if (base == c_map[i][j])
+				bfs(c_map, base, i, j);
 		}
 	}
 	//print_map(c_map);
@@ -178,7 +183,7 @@ int main() {
 		cin >> N;
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
-				cin >> map[i][j];
+				cin >> g_map[i][j];
 			}
 		}
 		//make_rand();
