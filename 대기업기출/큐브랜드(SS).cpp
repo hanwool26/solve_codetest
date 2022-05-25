@@ -15,37 +15,31 @@
 -> ans : 29 10
 제약사항
 N <= 64, H <= 255
-
-how to solve No.3
-- BFS
--> 자기 자신과 같거나 작으면 vector 좌표저장
--> 자기 자신보다 작은수가 가장자리로 가면 return
--> 자기 주변에 있는 큰 수중에 최소값을 저장 (해당 높이까지 물이 고임을 가정) 
-----> 일단 시간초과 나올 듯. 
 */
-
-
 
 
 #include <iostream>
 #include <algorithm>
 #include <vector>
 #include <cstring>
+#include <stack>
 #include <queue>
 #include <time.h>
+#include <set>
 using namespace std;
 
 int N;
 int map[65][65];
 int c_map[65][65];
 bool visit[65][65];
+set<pair<int, int>> parent[65][65];
 
 #define x first
 #define y second
 int dir_x[] = { -1, 1, 0, 0 };
 int dir_y[] = { 0, 0, -1, 1 };
 
-void print_map() {
+void print_map(int (*map)[65]) {
 	for (int i = 0; i < N; i++) {
 		for (int j = 0; j < N; j++) {
 			cout << map[i][j] << " ";
@@ -78,13 +72,12 @@ int get_max_space(int (*map)[65], int base, int x, int y) {
 	return count;
 }
 
-void get_max_space_main() {
+void get_max_space_main(int (*map)[65]) {
 	int max_cnt = 0;
 	int max_base = 0;
 	int cnt;
 	int base;
 	memset(visit, false, sizeof(visit));
-
 
 	for (int i = 0; i < N; i++) {
 		for (int j = 0; j < N; j++) {
@@ -101,106 +94,78 @@ void get_max_space_main() {
 			}
 		}
 	}
-	cout << max_base << " " << max_cnt << " ";
+	cout << max_base << " " << max_cnt << " " << endl;
 }
 
-vector<pair<int, int>> v;
-
-int bfs(int base, int x, int y) {
-	int visit[65][65];
-	//
-	
-	//if (x == 0 || y == 0 || x == N - 1 || y == N - 1) return 0;
-	v.clear();
-	
-	int nx, ny;
-	int cnt = 0;
-	int min_h = 256;
+void bfs(int (*map)[65], int base, int cx, int cy) {
 	queue<pair<int, int>> q;
-	q.push({ x, y });
-	visit[x][y] = true;
+	stack<pair<int, int>> s;
+
+	int nx, ny;
+	int min_h = 256;
+	pair<int, int> parent_pos;
+
+	if (parent[cx][cy].size() > 0) {
+		for (auto& i : parent[cx][cy]) {
+			q.push({ i.x, i.y });
+			s.push({ i.x, i.y });
+		}
+	}
+	q.push({ cx,cy });
+	visit[cx][cy] = true;
+
 	while (!q.empty()) {
-		x = q.front().x;
-		y = q.front().y;
+		cx = q.front().x;
+		cy = q.front().y;
 		q.pop();
-		v.push_back({ x,y });
+		s.push({ cx,cy }); // min_h 로 flood fill
+
 		for (int i = 0; i < 4; i++) {
-			nx = x + dir_x[i];
-			ny = y + dir_y[i];
-			if (nx <0 || nx > N - 1 || ny < 0 || ny > N - 1) continue;
+			nx = cx + dir_x[i];
+			ny = cy + dir_y[i];
+			
+			if (nx < 0 || nx > N - 1 || ny < 0 || ny > N - 1 || visit[nx][ny]) continue;
 			if (map[nx][ny] > base) {
-				min_h = min(min_h, map[nx][ny]);
+				//min_h = min(min_h, map[nx][ny]); // 물이 차오를 수 있는 높이값 저장하고 경로 탐색 안함. 
+				if (min_h > map[nx][ny]) {
+					min_h = map[nx][ny];
+					parent_pos = { nx,ny };
+				}
+				continue;
 			}
-
-			if (base < map[nx][ny] || visit[nx][ny]) continue;
-			if ((nx == 0 || nx == N - 1 || ny == 0 || ny == N - 1) && map[nx][ny] < base) return 0;
-
-			q.push({ nx, ny });
+			if ((nx == 0 || nx == N - 1 || ny == 0 || ny == N - 1) &&
+				map[nx][ny] <= base) return; // 가장자리에 있는 곳으로 물이 새어나가므로 빗물이 고일수없는 위치라 판단. 
+			q.push({ nx,ny });
 			visit[nx][ny] = true;
 		}
 	}
-	return min_h;
-}
 
-void copy_map() {
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < N; j++) {
-			c_map[i][j] = map[i][j];
-		}
+	if (s.size() == 1) return; // 갈곳이 없었다면 return
+	
+	while (!s.empty()) {
+		cx = s.top().x;
+		cy = s.top().y;
+		map[cx][cy] = min_h;
+		parent[parent_pos.x][parent_pos.y].insert({ cx, cy });
+		s.pop();
 	}
+	return;
 }
-
 
 void bfs_main() {
-	int max_cnt = 0;
-	int max_base = 0;
-	int min_h;
-	int cnt = 0;
-	int base;
+	memcpy(c_map, map, sizeof(map));
 	memset(visit, false, sizeof(visit));
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < N; j++) {
-			base = map[i][j];
-			min_h = bfs(base, i, j);
-			if (min_h != 0) {
-				copy_map();
-				for (auto& k : v) {
-					c_map[k.x][k.y] = min_h;
-				}
-				
-				cnt = get_max_space(c_map, min_h, i, j);
-
-				if (max_cnt < cnt) {
-					max_cnt = cnt;
-					max_base = min_h;
-				}
-				else if (max_cnt == cnt) {
-					max_base = max(max_base, min_h);
-				}
-			}
+	for (int i = 1; i < N-1; i++) {
+		for (int j = 1; j < N-1; j++) {
+			int base = map[i][j];
+			bfs(c_map, base, i, j);
 		}
 	}
-	cout << max_base << " " << max_cnt << endl;
+	//print_map(c_map);
+	get_max_space_main(c_map);
 }
 
-void make_rand() {
-	int n = 0;
-	for (int i = 0; i < 20; i++) {
-		for (int j = 0; j < 20; j++) {
-			
-			do {
-				n = rand() % 255;
-				if (n == 0) continue;
-				cout << n << " ";
-
-			} while (n == 0);
-		}
-		cout << endl;
-	}
-}
-
-int main() {
-
+int main() {                                                                                                                                                 
 	clock_t start, end;
 	start = clock();
 	ios::sync_with_stdio(false);
@@ -217,8 +182,9 @@ int main() {
 			}
 		}
 		//make_rand();
-		get_max_space_main();
+		//get_max_space_main();
 		bfs_main();
+
 	}
 	end = clock();
 	cout << (double)(end - start) / CLOCKS_PER_SEC << endl;
