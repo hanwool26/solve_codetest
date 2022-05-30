@@ -1,67 +1,50 @@
 #include <iostream>
+#include <unordered_map>
 #include <vector>
 #include <algorithm>
 
 using namespace std;
 
+int N;
 typedef struct player {
 	int idx;
-	int point;
 	int team;
-	int total;
+	int point;
 	player(int idx, int team, int point) {
 		this->idx = idx;
-		this->point = point;
 		this->team = team;
-		this->total = 0;
+		this->point = point;
 	}
-	bool operator<(struct player & p) {
+	bool operator<(const struct player& p)const {
 		return this->point < p.point;
 	}
 }Player;
 
-bool ascending_idx(Player a, Player b) {
-	return a.idx < b.idx;
-}
 
-int N;
-vector<Player> v;
-int team_total[27];
-int total;
 int main() {
 	freopen("전투게임.txt", "r", stdin);
 	cin >> N;
-	char t;
-	int p;
+	char in_t;
+	int in_p;
+	vector<Player> Players;
+	vector<int> save(N, 0);
+	unordered_map<char, int> t_point;
 	for (int i = 0; i < N; i++) {
-		cin >> t >> p;
-		v.push_back(Player(i, (t-'a'), p));
+		cin >> in_t >> in_p;
+		Players.push_back(Player(i, in_t, in_p));		
 	}
-	sort(v.begin(), v.end());
 
-	team_total[v[0].team] = v[0].point;
-	total = team_total[v[0].team];
-	
-	for (int i = 1; i < v.size(); i++) {
-		int per_total = 0;
-		int minus = 0;
-		int idx = i-1;
-		while (idx > 0 && (v[i].point == v[idx].point)) {
-			if (v[idx].team != v[i].team)
-				minus = v[idx].point;
-			idx--;
-		}
-		for (int j = 0; j < 26; j++) {
-			if (j == v[i].team) continue;
-			per_total += team_total[j];
-		}
-		v[i].total = per_total - minus;
-		team_total[v[i].team] += v[i].point;
+	sort(Players.begin(), Players.end());
+	int total = 0;
+	for (int i = 0; i < Players.size(); i++) {
+		Player p = Players[i];
+		
+		int save_point = total - t_point[p.team];
+		save[p.idx] = save_point;
+		total += p.point;
+		t_point[p.team] += p.point;				
 	}
-	sort(v.begin(), v.end(), ascending_idx);
-	for (auto& k : v) {
-		cout << k.total << endl;
+	for (auto& i : save) {
+		cout << i << endl;
 	}
-	return 0;
-
 }
